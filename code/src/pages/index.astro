@@ -6,6 +6,7 @@ import { Image } from 'astro:assets';
 import { friends, upcomingFriends } from '../data/friends';
 import fanniCover from '../assets/fanni-fuchs/cover.png';
 import fanniHero from '../assets/figures/fanni-fuchs-welcome.png';
+import instagramQr from '../assets/instagram-qr-card.png';
 
 const books = await getCollection('books');
 
@@ -211,6 +212,40 @@ const covers: Record<string, ImageMetadata> = {
           Im Alltag der Kita als Vorleserunde mit Sprachfördereffekt nutzbar.
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       INSTAGRAM
+       Branded QR (Instagram nametag, cropped to its white card) framed
+       in a site-styled band. Plain outbound link — no embed/pixel.
+       ============================================================ -->
+  <section id="instagram" class="instagram" aria-labelledby="instagram-heading">
+    <h2 id="instagram-heading" class="instagram__title">Folge uns auf Instagram</h2>
+    <p class="instagram__intro">
+      Neuigkeiten, Einblicke hinter die Kulissen und neue Freunde.
+      Scanne den Code mit deinem Handy oder besuche uns direkt.
+    </p>
+
+    <div class="instagram__card">
+      <Image
+        src={instagramQr}
+        alt="QR Code zum Instagram Profil von Lautstarke Freunde"
+        class="instagram__qr"
+        widths={[220, 320, 440]}
+        sizes="(max-width: 600px) 60vw, 300px"
+        loading="lazy"
+        decoding="async"
+      />
+      <p class="instagram__handle">@lautstarkefreunde</p>
+      <a
+        class="hero__cta instagram__cta"
+        href="https://www.instagram.com/lautstarkefreunde/"
+        target="_blank"
+        rel="me noopener noreferrer"
+      >
+        Zum Profil
+      </a>
     </div>
   </section>
 
