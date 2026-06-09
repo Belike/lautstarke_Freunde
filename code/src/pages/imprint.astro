@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Impressum">
+  <article class="legal-text">
+    <h1>Impressum</h1>
+
+    <!-- EXAMPLE / DRAFT — to be reviewed by the legal agent and confirmed by the
+         human before publishing.
+         Status: private sale, no registered Gewerbe -> two natural persons, no
+         legal-form suffix, no USt-IdNr. Open legal questions are flagged for the
+         legal agent (e.g. whether regular sale makes them "Unternehmer" per § 14
+         BGB / whether a GbR arises by law). -->
+
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>
+      Linda Gatz &amp; Norman Lüring<br />
+      Hauptmannstraße 37<br />
+      48565 Steinfurt
+    </p>
+
+    <h2>Kontakt</h2>
+    <p>
+      E-Mail: <a href="mailto:info@lautstarke-freunde.de">info@lautstarke-freunde.de</a>
+    </p>
+
+    <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+    <p>
+      Linda Gatz &amp; Norman Lüring<br />
+      Hauptmannstraße 37<br />
+      48565 Steinfurt
+    </p>
+
+    <h2>Streitschlichtung</h2>
+    <p>
+      Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren
+      vor einer Verbraucherschlichtungsstelle teilzunehmen.
+    </p>
+    <!-- NOTE (legal agent): The obligation to link to the EC ODR platform
+         (https://ec.europa.eu/consumers/odr/) arises only for "Unternehmer"
+         conducting online sales contracts with consumers (Art. 14 ODR-VO,
+         § 36 VSBG). Whether Linda Gatz & Norman Lüring qualify as
+         "Unternehmer" per § 14 BGB is an open question (see also GbR note
+         below). Until that question is resolved the platform link is omitted
+         to avoid implying a legal status that has not been confirmed.
+         If they are found to be "Unternehmer", re-add:
+           Die Europäische Kommission stellt eine Plattform zur
+           Online-Streitbeilegung (OS) bereit:
+           https://ec.europa.eu/consumers/odr/
+           Unsere E-Mail-Adresse finden Sie oben im Impressum.
+    -->
+  </article>
+</BaseLayout>

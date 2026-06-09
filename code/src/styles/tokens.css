@@ -1,0 +1,214 @@
+/*
+ * Design tokens — Lautstarke Freunde
+ * --------------------------------------------------------------------------
+ * Main owner: `designer` agent.
+ *
+ * COLOR CONCEPT
+ * -------------
+ * GLOBAL / BRAND: colorful and cheerful — no violet as the general site color.
+ *   Primary tone: warm emerald-teal (#1a8f72) — trustworthy, fresh, lively.
+ *   Secondary accent: sunny gold-yellow (#f5a623) — warm, childlike.
+ *   Tertiary accent: coral salmon (#e8554e) — vivid, attention-grabbing.
+ *   --accent on the home page = --color-brand-500 (teal).
+ *
+ * PER CHARACTER: each animal character has its own accent color as a token.
+ *   Fanni Fuchs → violet (#7c4daa). On the book page BaseLayout.astro overrides
+ *   --accent via an inline <style> with the value from the frontmatter
+ *   (accentColor: "#7c4daa"). All Fanni components that use var(--accent)
+ *   therefore appear violet — independent of the home page brand color.
+ *
+ * Further character accents follow the same pattern:
+ *   --accent-<character>: <color>;   (token)
+ *   accentColor: "<color>"           (frontmatter → inline override)
+ *
+ * Please do not include external fonts / CDN resources (GDPR).
+ */
+
+:root {
+
+  /* ------------------------------------------------------------------
+     BRAND PALETTE — emerald-teal (global primary color, NOT violet)
+     ------------------------------------------------------------------ */
+  --color-brand-50:  #edf7f4;   /* faint teal tint, large areas            */
+  --color-brand-100: #c9ece2;   /* soft background, cards                  */
+  --color-brand-200: #93d8c5;   /* dividers, decorative areas              */
+  --color-brand-300: #56bfa4;   /* borders, slightly emphasized areas      */
+  --color-brand-400: #26a484;   /* medium, interactive elements            */
+  --color-brand-500: #1a8f72;   /* primary color (buttons, badge, accents) */
+  --color-brand-600: #12715a;   /* hover/active state                      */
+  --color-brand-700: #0c5242;   /* deep teal, heading highlights           */
+
+  /* ------------------------------------------------------------------
+     ACCENT PALETTE — gold-yellow (secondary, warm highlights)
+     ------------------------------------------------------------------ */
+  --color-gold-50:  #fef9ec;
+  --color-gold-100: #fdeec4;
+  --color-gold-200: #fad980;
+  --color-gold-300: #f7c240;
+  --color-gold-400: #f5a623;   /* sunny gold-yellow — main token           */
+  --color-gold-500: #d4880d;   /* darker gold for hover/text               */
+
+  /* ------------------------------------------------------------------
+     ACCENT PALETTE — coral/salmon (tertiary, vivid)
+     ------------------------------------------------------------------ */
+  --color-coral-50:  #fef0ef;
+  --color-coral-100: #fcd4d3;
+  --color-coral-300: #f08784;
+  --color-coral-400: #e8554e;   /* strong coral — main token               */
+  --color-coral-500: #c93c35;   /* darker coral for hover                   */
+
+  /* ------------------------------------------------------------------
+     CHARACTER COLORS — one accent per character
+     (violet is EXCLUSIVELY Fanni Fuchs' color)
+     ------------------------------------------------------------------ */
+  --color-fanni-50:  #f5f0fa;
+  --color-fanni-100: #e8daf4;
+  --color-fanni-200: #d0b8ea;
+  --color-fanni-300: #b890d9;
+  --color-fanni-400: #9b6ec8;
+  --color-fanni-500: #7c4daa;   /* Fanni violet — primary tone on book page */
+  --color-fanni-600: #5e3285;
+  --color-fanni-700: #42235f;
+
+  --accent-fanni:    #7c4daa;   /* violet — Fanni Fuchs / sound /f/         */
+  --accent-fanni-dk: #5e3285;   /* darker violet for hover states           */
+  /* Further character accents go here: --accent-<character>: …;            */
+
+  /*
+   * --accent is the actively used page accent.
+   * Global (home/brand): teal — colorful, not violet.
+   * On book pages --accent is overridden via the BaseLayout.astro prop
+   * (accentColor in the frontmatter). Fanni Fuchs → #7c4daa (violet).
+   */
+  --accent:    var(--color-brand-500);
+  --accent-dk: var(--color-brand-600);
+
+  /* ------------------------------------------------------------------
+     SEMANTIC COLOR ALIASES
+     ------------------------------------------------------------------ */
+  --color-bg:          #fffcf8;   /* page background, warm white             */
+  --color-bg-subtle:   #f0f8f5;   /* section alternate background (teal tint) */
+  --color-surface:     #ffffff;   /* cards, panels                           */
+  --color-ink:         #172b25;   /* main text (very high contrast ~15:1)    */
+  --color-ink-muted:   #3d5a50;   /* secondary text (≥ 7:1 on --color-bg)   */
+  --color-ink-subtle:  #6b8a7e;   /* hints, captions (≥ 4.5:1)              */
+  --color-border:      var(--color-brand-200);
+  --color-border-subtle: var(--color-brand-100);
+
+  /* ------------------------------------------------------------------
+     TYPOGRAPHY — system font stack (GDPR-friendly, no CDN)
+     ------------------------------------------------------------------ */
+  --font-body:    system-ui, -apple-system, "Segoe UI", Roboto,
+                  "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-body);
+
+  --text-sm:   0.875rem;   /*  ~14 px */
+  --text-base: 1rem;       /*  ~16 px */
+  --text-lg:   1.125rem;   /*  ~18 px */
+  --text-xl:   1.375rem;   /*  ~22 px */
+  --text-2xl:  1.75rem;    /*  ~28 px */
+  --text-3xl:  2.25rem;    /*  ~36 px */
+  --text-4xl:  3rem;       /*  ~48 px */
+
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-bold:   700;
+
+  /* ------------------------------------------------------------------
+     SPACING
+     ------------------------------------------------------------------ */
+  --space-1: 0.25rem;    /*  4 px */
+  --space-2: 0.5rem;     /*  8 px */
+  --space-3: 1rem;       /* 16 px */
+  --space-4: 1.5rem;     /* 24 px */
+  --space-5: 2.5rem;     /* 40 px */
+  --space-6: 4rem;       /* 64 px */
+  --space-7: 6rem;       /* 96 px */
+
+  /* ------------------------------------------------------------------
+     RADII & SHADOWS — round, soft, child-friendly shapes
+     ------------------------------------------------------------------ */
+  --radius-sm: 8px;
+  --radius:    16px;
+  --radius-lg: 28px;
+  --radius-xl: 40px;
+
+  --shadow-sm: 0 2px 8px rgba(12, 82, 66, 0.08);
+  --shadow:    0 6px 24px rgba(12, 82, 66, 0.12);
+  --shadow-lg: 0 12px 40px rgba(12, 82, 66, 0.18);
+
+  /* ------------------------------------------------------------------
+     LAYOUT
+     ------------------------------------------------------------------ */
+  --maxw:         72rem;   /* 1152 px — max page width */
+  --maxw-text:    48rem;   /*  768 px — readable text column */
+
+  /* ------------------------------------------------------------------
+     ANIMATIONS
+     ------------------------------------------------------------------ */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration: 200ms;
+}
+
+/* ===================================================================
+   RESET & GLOBALS
+   =================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.65;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  margin-block: 0 var(--space-3);
+  color: var(--color-ink);
+}
+
+p {
+  margin-block: 0 var(--space-3);
+}
+
+a {
+  color: var(--color-brand-500);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--duration) var(--ease-out);
+}
+
+a:hover {
+  color: var(--color-brand-700);
+}
+
+/* Visible focus — never remove (accessibility). */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}

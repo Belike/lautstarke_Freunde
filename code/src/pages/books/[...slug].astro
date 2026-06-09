@@ -1,0 +1,235 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+
+import cover from '../../assets/fanni-fuchs/cover.png';
+import fanniPointing from '../../assets/figures/fanni-fuchs-pointing.png';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.map((book) => ({
+    params: { slug: book.id },
+    props: { book },
+  }));
+}
+
+const { book } = Astro.props;
+const { Content } = await render(book);
+
+// Decides whether Fanni-Fuchs-specific content is rendered.
+const isFanniFuchs = book.id === 'fanni-fuchs';
+
+// Tips for parents & professionals (from the book's parent info).
+const parentTips = [
+  'Lesen Sie die Geschichte regelmäßig vor.',
+  'Sprechen Sie die Wörter ganz natürlich.',
+  'Betonen Sie den Ziellaut nicht übertrieben.',
+  'Haben Sie Spaß an der Geschichte.',
+  'Lassen Sie Ihr Kind zuhören, zeigen oder mitsprechen.',
+];
+---
+
+<BaseLayout
+  title={book.data.title}
+  description={book.data.subtitle}
+  accent={book.data.accentColor}
+>
+  <article class="book" aria-labelledby="book-title">
+
+    <!-- ============================================================
+         BOOK HEADER
+         ============================================================ -->
+    <header class="book__head">
+      <nav class="book__breadcrumb" aria-label="Brotkrumennavigation">
+        <ol class="breadcrumb__list" role="list">
+          <li class="breadcrumb__item">
+            <a href="/">Start</a>
+          </li>
+          <li class="breadcrumb__item" aria-hidden="true">›</li>
+          <li class="breadcrumb__item">
+            <a href="/#books">Bücher</a>
+          </li>
+          <li class="breadcrumb__item" aria-hidden="true">›</li>
+          <li class="breadcrumb__item" aria-current="page">
+            {book.data.title}
+          </li>
+        </ol>
+      </nav>
+
+      <p class="book__sound-badge" aria-label={`Ziellaut dieses Buches: ${book.data.sound}`}>
+        Laut <strong>{book.data.sound}</strong>
+      </p>
+      <h1 id="book-title" class="book__title">{book.data.title}</h1>
+      {book.data.subtitle && (
+        <p class="book__subtitle">{book.data.subtitle}</p>
+      )}
+      {book.data.ageRecommendation && (
+        <p class="book__age">
+          Altersempfehlung: <span>{book.data.ageRecommendation}</span>
+        </p>
+      )}
+      {book.data.character && (
+        <p class="book__character">
+          Figur: <span>{book.data.character}</span>
+        </p>
+      )}
+    </header>
+
+    <!-- ============================================================
+         COVER (Fanni Fuchs)
+         ============================================================ -->
+    {isFanniFuchs && (
+      <div class="book__cover">
+        <Image
+          src={cover}
+          alt="Cover von „Fanni Fuchs und das Fußballfest“: Fanni Fuchs und ihre Freunde im lila Trikot rennen über ein Fußballfeld."
+          class="book__cover-image"
+          widths={[360, 600, 900]}
+          sizes="(max-width: 600px) 90vw, (max-width: 1100px) 360px, 448px"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    <!-- ============================================================
+         BOOK CONTENT (Markdown — blurb)
+         ============================================================ -->
+    <section class="book__description" aria-labelledby="description-heading">
+      <h2 id="description-heading" class="book__description-title">
+        Worum geht es?
+      </h2>
+      <div class="book__content">
+        <Content />
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHARACTER PROFILE / STECKBRIEF (Fanni Fuchs)
+         ============================================================ -->
+    {isFanniFuchs && (
+      <section class="steckbrief" aria-labelledby="steckbrief-heading">
+        <h2 id="steckbrief-heading" class="steckbrief__headline">Das ist Fanni Fuchs!</h2>
+
+        <div class="steckbrief__layout">
+
+          <!-- Clipboard card (LEFT) -->
+          <div class="steckbrief__clipboard">
+            <div class="steckbrief__clip" aria-hidden="true"></div>
+            <div class="steckbrief__card">
+              <h3 class="steckbrief__card-title">Fanni Fuchs &ndash; Steckbrief</h3>
+              <dl class="steckbrief__data">
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🦊</span>Name</dt>
+                  <dd class="steckbrief__val">Fanni Fuchs</dd>
+                </div>
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🎂</span>Alter</dt>
+                  <dd class="steckbrief__val">Fünf</dd>
+                </div>
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🏡</span>Wohnort</dt>
+                  <dd class="steckbrief__val">Fuchswald</dd>
+                </div>
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">💜</span>Lieblingsfarbe</dt>
+                  <dd class="steckbrief__val">Flieder</dd>
+                </div>
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🍽️</span>Lieblingsessen</dt>
+                  <dd class="steckbrief__val">Fischstäbchen</dd>
+                </div>
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">⚽</span>Lieblingsfach</dt>
+                  <dd class="steckbrief__val">Fußball</dd>
+                </div>
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🍵</span>Lieblingsgetränk</dt>
+                  <dd class="steckbrief__val">Früchtetee</dd>
+                </div>
+                <div class="steckbrief__row">
+                  <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">📍</span>Lieblingsort</dt>
+                  <dd class="steckbrief__val">Fußballplatz</dd>
+                </div>
+              </dl>
+              <p class="steckbrief__motto">
+                <span class="steckbrief__motto-icon" aria-hidden="true">⭐</span>
+                <em>„Fair spielen, Freunde finden, Freude haben!"</em>
+              </p>
+            </div>
+          </div>
+
+          <!-- Fanni figure (RIGHT) -->
+          <div class="steckbrief__figure" aria-hidden="true">
+            <Image
+              src={fanniPointing}
+              alt=""
+              class="steckbrief__figure-image"
+              widths={[240, 360, 480]}
+              sizes="(max-width: 600px) 50vw, 300px"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+
+        </div>
+      </section>
+    )}
+
+    <!-- ============================================================
+         FOR PARENTS & PROFESSIONALS (parent info)
+         ============================================================ -->
+    {isFanniFuchs && (
+      <section class="parent-info" aria-labelledby="parent-info-heading">
+        <h2 id="parent-info-heading" class="parent-info__title">
+          Für Eltern &amp; Fachleute
+        </h2>
+        <p class="parent-info__lead">
+          Dieses Buch wurde entwickelt, um Kinder während einer logopädischen
+          Behandlung spielerisch zu begleiten. Im Mittelpunkt steht der Laut
+          <strong> /f/</strong>, mit vielen Wörtern wie <em>Fanni, Fuchs,
+          Fußball, Fahne, Feld, finden</em> und <em>fantastisch</em>.
+        </p>
+
+        <div class="parent-info__cards">
+          <div class="info-card">
+            <h3 class="info-card__title">So unterstützen Sie Ihr Kind</h3>
+            <ul class="info-card__list" role="list">
+              {parentTips.map((tip) => (
+                <li>{tip}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-card__title">Was muss mein Kind können?</h3>
+            <p class="info-card__big">Gar nichts!</p>
+            <p>
+              Ihr Kind muss die Wörter nicht nachsprechen und keine Aufgaben
+              lösen. Schon das Zuhören hilft dabei, den Laut besser
+              kennenzulernen. Lesen Sie die Geschichte ruhig mehrfach.
+              Kinder lieben Wiederholungen.
+            </p>
+          </div>
+        </div>
+
+        <p class="parent-info__note">
+          <strong>Hinweis:</strong> Dieses Buch ersetzt keine logopädische
+          Behandlung. Es wurde als spielerische Ergänzung für den Alltag
+          entwickelt.
+        </p>
+      </section>
+    )}
+
+    <!-- ============================================================
+         BACK LINK
+         ============================================================ -->
+    <nav class="book__navigation" aria-label="Seitennavigation">
+      <a href="/#books" class="book__back-link">
+        &#8592; Zurück zur Bücherübersicht
+      </a>
+    </nav>
+
+  </article>
+</BaseLayout>

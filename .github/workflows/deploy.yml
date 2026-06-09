@@ -1,0 +1,48 @@
+name: Deploy auf GitHub Pages
+
+# Veröffentlicht die Astro-Seite aus dem Unterordner `code/` auf GitHub Pages.
+# Läuft bei Push auf `main` oder manuell.
+#
+# WICHTIG (vom cicd-Agent zu erledigen, einmalig):
+#   GitHub → Repo → Settings → Pages → "Source" auf "GitHub Actions" stellen.
+#
+# Freigabe-Regel (siehe orchestrator): vor dem ersten produktiven Deploy
+# müssen qa-tester ("QA bestanden") und legal ("Go") vorliegen.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Gleichzeitige Deploys vermeiden; laufende nicht abbrechen.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Astro bauen & Pages-Artefakt erzeugen
+        uses: withastro/action@v3
+        with:
+          path: code          # Astro-Projekt liegt im Unterordner code/
+          node-version: 22
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Auf GitHub Pages deployen
+        id: deployment
+        uses: actions/deploy-pages@v4

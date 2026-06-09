@@ -1,0 +1,1604 @@
+/*
+ * main.css — Lautstarke Freunde
+ * --------------------------------------------------------------------------
+ * Component styles, utilities, layout.
+ * Tokens live in tokens.css (imported before this file).
+ *
+ * Structure:
+ *   1. Utilities & helpers
+ *   2. Layout wrapper / container
+ *   3. site-header
+ *   4. site-footer
+ *   5. Home — hero
+ *   6. Home — about / features
+ *   7. Home — books overview / book cards
+ *   8. Home — audiences
+ *   9. Home — contact
+ *  10. Book page — book__head, breadcrumb, sound badge
+ *  11. Book page — cover image (book__cover / book__cover-image)
+ *  12. Book page — character profile
+ *  13. Book page — book content (markdown prose)
+ *  14. Book page — navigation (back link)
+ *  15. Legal texts
+ *  16. Home — friends ensemble
+ *  17. Book page — profile layout (figure + data)
+ *  18. Book page — the friends (mini ensemble)
+ *  19. Book page — for parents & professionals
+ *  20. Book page — reading sample / look inside
+ *
+ * COLOR PRINCIPLE:
+ *   Global/brand elements use --color-brand-* (teal).
+ *   On book pages --accent is overridden via the BaseLayout prop
+ *   (frontmatter → accentColor). Fanni Fuchs uses violet (#7c4daa).
+ *   Page-specific headings/accents on book pages fall back to var(--accent)
+ *   and switch automatically with the character.
+ */
+
+
+/* ===================================================================
+   1. UTILITIES & HELPERS
+   =================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Section wrapper with an optional colored background */
+.section-band {
+  background: var(--color-bg-subtle);
+}
+
+
+/* ===================================================================
+   2. LAYOUT WRAPPER
+   =================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* Section inner spacing, consistent across all sections */
+section {
+  padding-block: var(--space-6);
+}
+
+@media (max-width: 48rem) {
+  section {
+    padding-block: var(--space-5);
+  }
+}
+
+
+/* ===================================================================
+   3. SITE-HEADER
+   =================================================================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-3);
+  padding-inline: var(--space-4);
+  background: rgba(255, 252, 248, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--color-border-subtle);
+  max-width: 100%;
+}
+
+.site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.site-header__logo {
+  width: auto;
+  height: clamp(2.4rem, 6vw, 3.1rem);
+  transition: transform var(--duration) var(--ease-out);
+}
+
+.site-header__brand:hover .site-header__logo {
+  transform: scale(1.04) rotate(-1deg);
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.site-header__nav a {
+  font-size: var(--text-base);
+  font-weight: var(--fw-medium);
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  padding-block: var(--space-1);
+  border-bottom: 2px solid transparent;
+  transition: color var(--duration) var(--ease-out),
+              border-color var(--duration) var(--ease-out);
+}
+
+.site-header__nav a:hover,
+.site-header__nav a[aria-current="page"] {
+  color: var(--color-brand-500);
+  border-bottom-color: var(--color-brand-400);
+}
+
+@media (max-width: 36rem) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .site-header__nav {
+    gap: var(--space-3);
+  }
+}
+
+
+/* ===================================================================
+   4. SITE-FOOTER
+   =================================================================== */
+
+.site-footer {
+  background: var(--color-brand-700);
+  color: var(--color-brand-100);
+  padding-block: var(--space-5);
+  padding-inline: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-brand-200);
+}
+
+.site-footer nav {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.site-footer nav a {
+  font-size: var(--text-sm);
+  color: var(--color-brand-200);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color var(--duration) var(--ease-out);
+}
+
+.site-footer nav a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.site-footer__social {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.site-footer__icon {
+  flex-shrink: 0;
+}
+
+
+/* ===================================================================
+   5. HOME — HERO
+   =================================================================== */
+
+.hero {
+  /*
+   * Picture-book mood: cheerful teal-gold gradient — colorful and warm,
+   * no violet on the home page.
+   * Decorative circles via pseudo-elements — pure CSS, no images.
+   */
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      160deg,
+      var(--color-brand-100) 0%,
+      var(--color-brand-50)  50%,
+      var(--color-gold-50)  100%
+    );
+
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  min-height: clamp(24rem, 55vh, 40rem);
+  padding-block: var(--space-6);
+  padding-inline: var(--space-4);
+}
+
+/* Decorative circle top-left — teal */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -3rem;
+  left: -3rem;
+  width: clamp(10rem, 25vw, 18rem);
+  height: clamp(10rem, 25vw, 18rem);
+  border-radius: 50%;
+  background: var(--color-brand-300);
+  opacity: 0.30;
+  pointer-events: none;
+}
+
+/* Decorative circle bottom — gold */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -2rem;
+  left: 20%;
+  width: clamp(8rem, 18vw, 14rem);
+  height: clamp(8rem, 18vw, 14rem);
+  border-radius: 50%;
+  background: var(--color-gold-400);
+  opacity: 0.20;
+  pointer-events: none;
+}
+
+/* Two columns from tablet up */
+@media (min-width: 48rem) {
+  .hero {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-5);
+    max-width: var(--maxw);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+  }
+}
+
+@media (min-width: 72rem) {
+  .hero {
+    padding-inline: var(--space-6);
+    min-height: clamp(28rem, 60vh, 44rem);
+  }
+}
+
+.hero__content {
+  max-width: 36rem;
+  z-index: 1;
+}
+
+.hero__title {
+  font-size: clamp(var(--text-3xl), 5vw, var(--text-4xl));
+  font-weight: var(--fw-bold);
+  color: var(--color-brand-700);
+  margin-bottom: var(--space-3);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.hero__lead {
+  font-size: clamp(var(--text-base), 2vw, var(--text-lg));
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-5);
+  max-width: 34rem;
+}
+
+/* CTA button — brand teal on the home page */
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-brand-500);
+  color: #ffffff;
+  font-size: var(--text-base);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  transition: background var(--duration) var(--ease-out),
+              box-shadow var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out);
+  /* Touch target ≥ 44px */
+  min-height: 44px;
+}
+
+.hero__cta:hover {
+  background: var(--color-brand-600);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+.hero__cta:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Quiet secondary link beneath the primary CTA */
+.hero__secondary {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* Figure container */
+.hero__figure {
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  /* Fanni sticks slightly out of the hero on tablet+ */
+  margin-bottom: calc(-1 * var(--space-6));
+}
+
+.hero__figure-image {
+  width: clamp(12rem, 28vw, 22rem);
+  height: auto;
+  /*
+   * Limit the height relative to the viewport so the figure (incl. head)
+   * always stays inside the hero on short or strongly zoomed windows and is
+   * not clipped at the top by the hero's overflow:hidden.
+   */
+  max-height: min(30rem, 72vh);
+  object-fit: contain;
+  object-position: bottom;
+  /* soft shadow under the figure */
+  filter: drop-shadow(0 16px 32px rgba(12, 82, 66, 0.18));
+}
+
+@media (max-width: 48rem) {
+  .hero__figure {
+    margin-bottom: calc(-1 * var(--space-5));
+    order: -1; /* figure on top on mobile */
+  }
+
+  .hero__figure-image {
+    width: clamp(10rem, 50vw, 14rem);
+  }
+}
+
+
+/* ===================================================================
+   6. HOME — ABOUT / FEATURES
+   =================================================================== */
+
+.about {
+  background: var(--color-surface);
+  /* Enough spacing, since the Fanni figure reaches into the hero area */
+  padding-top: calc(var(--space-6) + var(--space-5));
+  padding-inline: var(--space-4);
+  max-width: var(--maxw);
+  margin-inline: auto;
+  width: 100%;
+}
+
+.about__title {
+  font-size: clamp(var(--text-2xl), 3.5vw, var(--text-3xl));
+  color: var(--color-brand-700);
+  margin-bottom: var(--space-3);
+}
+
+.about__text {
+  font-size: var(--text-lg);
+  color: var(--color-ink-muted);
+  max-width: var(--maxw-text);
+  margin-bottom: var(--space-5);
+}
+
+/* Features list */
+.about__features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--space-4);
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-brand-50);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration) var(--ease-out),
+              box-shadow var(--duration) var(--ease-out);
+}
+
+.feature:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.feature__icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  /* Emoji background pill */
+  background: white;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.feature__text {
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+  font-weight: var(--fw-medium);
+  line-height: 1.45;
+  padding-top: 0.2em;
+}
+
+
+/* ===================================================================
+   7. HOME — BOOKS OVERVIEW
+   =================================================================== */
+
+.books-overview {
+  background: var(--color-bg-subtle);
+  padding-inline: var(--space-4);
+  width: 100%;
+}
+
+.books-overview__title {
+  font-size: clamp(var(--text-2xl), 3.5vw, var(--text-3xl));
+  color: var(--color-brand-700);
+  max-width: var(--maxw);
+  margin-inline: auto;
+  margin-bottom: var(--space-5);
+}
+
+.books-overview__empty,
+.books-overview__outlook {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  font-size: var(--text-base);
+  color: var(--color-ink-subtle);
+  font-style: italic;
+  margin-top: var(--space-4);
+}
+
+.books-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: var(--maxw);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-4);
+}
+
+/* Book card */
+.book-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border);
+  padding: var(--space-4);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: transform var(--duration) var(--ease-out),
+              box-shadow var(--duration) var(--ease-out);
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.book-card__cover-link {
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.book-card__cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration) var(--ease-out);
+}
+
+.book-card:hover .book-card__cover {
+  transform: scale(1.02);
+}
+
+.book-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.book-card__sound {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-brand-500);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.book-card__sound strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: var(--color-brand-500);
+  color: white;
+  border-radius: 50%;
+  font-size: var(--text-base);
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.book-card__title {
+  font-size: var(--text-xl);
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.book-card__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.book-card__age {
+  font-size: var(--text-sm);
+  color: var(--color-ink-subtle);
+  margin: 0;
+}
+
+.book-card__age span {
+  font-weight: var(--fw-bold);
+  color: var(--color-ink-muted);
+}
+
+/* Book card CTA link — brand teal on the home page */
+.book-card__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-brand-500);
+  color: #ffffff;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+  border-radius: var(--radius-xl);
+  min-height: 44px;
+  transition: background var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out);
+}
+
+.book-card__link:hover {
+  background: var(--color-brand-600);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+
+/* ===================================================================
+   8. HOME — AUDIENCES
+   ===================================================================
+   Three cards, each with its own accent from the colorful palette:
+   parents → teal, speech therapists → gold, educators → coral.
+   =================================================================== */
+
+.audiences {
+  background: var(--color-surface);
+  padding-inline: var(--space-4);
+}
+
+.audiences__title {
+  font-size: clamp(var(--text-2xl), 3.5vw, var(--text-3xl));
+  color: var(--color-brand-700);
+  max-width: var(--maxw);
+  margin-inline: auto;
+  margin-bottom: var(--space-5);
+}
+
+.audiences__grid {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-4);
+}
+
+.audience {
+  padding: var(--space-5) var(--space-4);
+  background: var(--color-brand-50);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--color-brand-400);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out);
+}
+
+.audience:hover {
+  border-left-color: var(--color-brand-600);
+  transform: translateY(-2px);
+}
+
+/* Gold — speech therapists */
+.audience:nth-child(2) {
+  background: var(--color-gold-50);
+  border-left-color: var(--color-gold-400);
+}
+
+.audience:nth-child(2):hover {
+  border-left-color: var(--color-gold-500);
+}
+
+/* Coral — educators */
+.audience:nth-child(3) {
+  background: var(--color-coral-50);
+  border-left-color: var(--color-coral-400);
+}
+
+.audience:nth-child(3):hover {
+  border-left-color: var(--color-coral-500);
+}
+
+.audience__name {
+  font-size: var(--text-xl);
+  color: var(--color-brand-600);
+  margin-bottom: var(--space-2);
+}
+
+.audience:nth-child(2) .audience__name {
+  color: var(--color-gold-500);
+}
+
+.audience:nth-child(3) .audience__name {
+  color: var(--color-coral-500);
+}
+
+.audience__text {
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+
+/* ===================================================================
+   9. HOME — CONTACT
+   =================================================================== */
+
+.contact {
+  background: var(--color-bg-subtle);
+  padding-inline: var(--space-4);
+}
+
+.contact__title {
+  font-size: clamp(var(--text-2xl), 3.5vw, var(--text-3xl));
+  color: var(--color-brand-700);
+  max-width: var(--maxw-text);
+  margin-inline: auto;
+  margin-bottom: var(--space-3);
+}
+
+.contact__intro {
+  max-width: var(--maxw-text);
+  margin-inline: auto;
+  font-size: var(--text-lg);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-5);
+}
+
+.contact__card {
+  max-width: var(--maxw-text);
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-5);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.contact__label {
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+  margin: 0 0 var(--space-4);
+}
+
+.contact__email {
+  /* long address must not overflow on narrow screens */
+  max-width: 100%;
+  word-break: break-word;
+}
+
+
+/* ===================================================================
+   10. BOOK PAGE — BOOK__HEAD, BREADCRUMB, SOUND BADGE
+   ===================================================================
+   On book pages var(--accent) = character accent (inline override).
+   Fanni Fuchs: violet (#7c4daa). Further characters follow.
+   =================================================================== */
+
+.book {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+.book__head {
+  padding-block: var(--space-5) var(--space-4);
+  border-bottom: 2px solid var(--color-border-subtle);
+  margin-bottom: var(--space-5);
+}
+
+/* Breadcrumb */
+.book__breadcrumb {
+  margin-bottom: var(--space-4);
+}
+
+.breadcrumb__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  align-items: center;
+}
+
+.breadcrumb__item {
+  font-size: var(--text-sm);
+  color: var(--color-ink-subtle);
+}
+
+.breadcrumb__item a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.breadcrumb__item a:hover {
+  text-decoration: underline;
+  color: var(--color-ink);
+}
+
+.breadcrumb__item[aria-current="page"] {
+  color: var(--color-ink-muted);
+  font-weight: var(--fw-medium);
+}
+
+/* Sound badge — character accent */
+.book__sound-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3) 0;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.book__sound-badge strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  font-size: var(--text-lg);
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.book__title {
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+  color: var(--color-ink);
+  margin-bottom: var(--space-2);
+  line-height: 1.15;
+}
+
+.book__subtitle {
+  font-size: var(--text-xl);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-3);
+}
+
+.book__age,
+.book__character {
+  font-size: var(--text-base);
+  color: var(--color-ink-subtle);
+  margin: var(--space-1) 0 0 0;
+}
+
+.book__age span,
+.book__character span {
+  font-weight: var(--fw-bold);
+  color: var(--color-ink-muted);
+}
+
+
+/* ===================================================================
+   11. BOOK PAGE — COVER IMAGE (book__cover / book__cover-image)
+   ===================================================================
+   The one prominent cover image of the book page.
+   Looks like a real book cover: centered, cover-typical proportion,
+   soft shadow, gentle border in the character accent color.
+   =================================================================== */
+
+.book__cover {
+  margin-block: var(--space-5) var(--space-6);
+  display: flex;
+  justify-content: center;
+}
+
+.book__cover-image {
+  width: 100%;
+  max-width: 22rem;   /* cover-typical proportion — not full-bleed */
+  height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 4px solid var(--accent);
+  /* subtle glow in the character color */
+  outline: 1px solid rgba(0, 0, 0, 0.06);
+  outline-offset: 0;
+  display: block;
+}
+
+@media (min-width: 48rem) {
+  .book__cover-image {
+    max-width: 28rem;
+  }
+}
+
+
+/* ===================================================================
+   12. BOOK PAGE — CHARACTER PROFILE
+   ===================================================================
+   Profile with a text-based definition list plus the cut-out figure.
+   =================================================================== */
+
+.profile {
+  padding-block: var(--space-6);
+  border-bottom: 2px solid var(--color-border-subtle);
+}
+
+.profile__title {
+  font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+  color: var(--accent);
+  margin-bottom: var(--space-5);
+}
+
+.profile__info {
+  max-width: var(--maxw-text);
+}
+
+.profile__name {
+  font-size: var(--text-2xl);
+  color: var(--color-ink);
+  margin-bottom: var(--space-4);
+}
+
+/* Definition list — two columns, clearly readable */
+.profile__data {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-4);
+  align-items: baseline;
+}
+
+.profile__data dt {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-ink-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  padding-block: var(--space-2);
+  border-right: 2px solid var(--color-border);
+  padding-right: var(--space-3);
+}
+
+.profile__data dd {
+  margin: 0;
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  padding-block: var(--space-2);
+  padding-left: var(--space-1);
+}
+
+.profile__data dd strong {
+  color: var(--accent);
+  font-size: var(--text-xl);
+}
+
+
+/* ===================================================================
+   13. BOOK PAGE — BOOK CONTENT (markdown prose)
+   =================================================================== */
+
+.book__description {
+  padding-block: var(--space-6);
+  border-bottom: 2px solid var(--color-border-subtle);
+}
+
+.book__description-title {
+  font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+  color: var(--accent);
+  margin-bottom: var(--space-4);
+}
+
+.book__content {
+  max-width: var(--maxw-text);
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+  line-height: 1.75;
+}
+
+.book__content p {
+  margin-bottom: var(--space-4);
+}
+
+.book__content h2,
+.book__content h3 {
+  color: var(--accent);
+  margin-top: var(--space-5);
+}
+
+.book__content strong {
+  color: var(--accent);
+}
+
+.book__content a {
+  color: var(--accent);
+}
+
+.book__content a:hover {
+  color: var(--color-ink);
+}
+
+
+/* ===================================================================
+   14. BOOK PAGE — NAVIGATION (BACK LINK)
+   =================================================================== */
+
+.book__navigation {
+  padding-block: var(--space-5);
+}
+
+.book__back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-brand-50);
+  color: var(--color-brand-600);
+  font-size: var(--text-base);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--color-border);
+  min-height: 44px;
+  transition: background var(--duration) var(--ease-out),
+              border-color var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out);
+}
+
+.book__back-link:hover {
+  background: var(--color-brand-100);
+  border-color: var(--color-brand-400);
+  transform: translateX(-3px);
+  color: var(--color-brand-700);
+}
+
+
+/* ===================================================================
+   15. LEGAL TEXTS (Imprint, Privacy)
+   =================================================================== */
+
+.legal-text {
+  max-width: var(--maxw-text);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  padding-block: var(--space-6);
+}
+
+.legal-text h1 {
+  font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+  color: var(--color-brand-700);
+  margin-bottom: var(--space-5);
+}
+
+.legal-text h2 {
+  font-size: var(--text-xl);
+  color: var(--color-brand-600);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-3);
+}
+
+.legal-text p,
+.legal-text li {
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+  line-height: 1.75;
+}
+
+
+/* ===================================================================
+   16. HOME — FRIENDS ENSEMBLE
+   =================================================================== */
+
+.friends {
+  background: var(--color-surface);
+  padding-inline: var(--space-4);
+}
+
+.friends__title {
+  font-size: clamp(var(--text-2xl), 3.5vw, var(--text-3xl));
+  color: var(--color-brand-700);
+  max-width: var(--maxw);
+  margin-inline: auto;
+  margin-bottom: var(--space-2);
+}
+
+.friends__lead {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  font-size: var(--text-lg);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-5);
+}
+
+.friends__grid {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: var(--maxw);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: var(--space-4);
+}
+
+.friend-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-3) var(--space-5);
+  background: var(--color-brand-50);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border-subtle);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration) var(--ease-out),
+              box-shadow var(--duration) var(--ease-out);
+}
+
+.friend-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.friend-card__image-area {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 12rem;
+  margin-bottom: var(--space-2);
+}
+
+.friend-card__image {
+  width: auto;
+  max-height: 12rem;
+  filter: drop-shadow(0 10px 18px rgba(12, 82, 66, 0.16));
+}
+
+.friend-card__name {
+  font-size: var(--text-xl);
+  color: var(--color-brand-700);
+  margin: 0;
+}
+
+.friend-card__text {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.friend-card__sound {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-brand-700);
+}
+
+.friend-card__sound strong {
+  color: var(--color-brand-600);
+}
+
+/* Push the call-to-action to the card's bottom edge */
+.friend-card__link,
+.friend-card__badge {
+  margin-top: auto;
+}
+
+.friend-card__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-brand-500);
+  color: #ffffff;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: background var(--duration) var(--ease-out),
+              transform var(--duration) var(--ease-out);
+}
+
+.friend-card__link:hover {
+  background: var(--color-brand-600);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.friend-card__badge {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-ink-subtle);
+  background: var(--color-bg-subtle);
+  border: 1.5px dashed var(--color-border);
+  border-radius: 999px;
+}
+
+/* Upcoming friends sit slightly back from the available one */
+.friend-card--soon .friend-card__image {
+  opacity: 0.9;
+}
+
+
+/* ===================================================================
+   17. BOOK PAGE — PROFILE LAYOUT (figure + data)
+   =================================================================== */
+
+.profile__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+@media (min-width: 48rem) {
+  .profile__layout {
+    grid-template-columns: minmax(12rem, 18rem) 1fr;
+  }
+}
+
+.profile__figure {
+  display: flex;
+  justify-content: center;
+}
+
+.profile__figure-image {
+  width: auto;
+  max-height: 22rem;
+  filter: drop-shadow(0 16px 28px rgba(94, 50, 133, 0.28));
+}
+
+.profile__quote {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-fanni-50);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg);
+  font-style: italic;
+  color: var(--color-ink-muted);
+}
+
+
+/* ===================================================================
+   19. BOOK PAGE — FOR PARENTS & PROFESSIONALS
+   =================================================================== */
+
+.parent-info {
+  padding-block: var(--space-6);
+  border-bottom: 2px solid var(--color-border-subtle);
+}
+
+.parent-info__title {
+  font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+  color: var(--accent);
+  margin-bottom: var(--space-4);
+}
+
+.parent-info__lead {
+  max-width: var(--maxw-text);
+  font-size: var(--text-lg);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-5);
+}
+
+.parent-info__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-4);
+}
+
+.info-card {
+  padding: var(--space-5) var(--space-4);
+  background: var(--color-fanni-50);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-fanni-100);
+}
+
+.info-card__title {
+  font-size: var(--text-lg);
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+}
+
+.info-card__list {
+  margin: 0;
+  padding-left: 1.2em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.info-card__list li,
+.info-card p {
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+  line-height: 1.6;
+}
+
+.info-card__big {
+  font-size: var(--text-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  margin-bottom: var(--space-2);
+}
+
+.parent-info__note {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  background: var(--color-gold-50);
+  border-left: 4px solid var(--color-gold-400);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  color: var(--color-ink-muted);
+}
+
+.parent-info__note strong {
+  color: var(--color-gold-500);
+}
+
+
+/* ===================================================================
+   REDUCED MOTION — accessibility
+   =================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ===================================================================
+   STECKBRIEF (character profile clipboard)
+   -------------------------------------------------------------------
+   Cartoon-style clipboard card for each book character.
+   Uses var(--accent) which is overridden per book page via frontmatter.
+   On the Fanni Fuchs page: --accent = #7c4daa (violet).
+
+   Token mapping:
+     --accent          character accent color (violet on Fanni page)
+     --accent-dk       darker accent for borders/hovers
+     --color-bg        warm cream page background (#fffcf8), used as
+                       clipboard fill (close to spec #fffdf5)
+     --color-ink-subtle secondary label text
+     --radius-sm       8px  — clip and inner elements
+     --radius          16px — clipboard and favorites panel
+     --shadow          medium card shadow
+     --space-1/2/3/4/5 spacing scale
+     --fw-bold / --fw-medium  font weights
+     --text-sm / --text-base  type scale
+   =================================================================== */
+
+/* Section wrapper */
+.steckbrief {
+  max-width: 56rem;   /* ~900 px */
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  padding-block: var(--space-6);
+  text-align: left;   /* override text-align for inner content */
+}
+
+/* Section headline — centered above the clipboard layout */
+.steckbrief__headline {
+  text-align: center;
+  font-size: clamp(var(--text-xl), 3.5vw, var(--text-2xl));
+  color: var(--accent);
+  margin-bottom: var(--space-5);
+}
+
+/* Three-column desktop layout: clipboard | figure | favorites */
+.steckbrief__layout {
+  display: grid;
+  grid-template-columns: 1fr;   /* mobile: single column */
+  gap: var(--space-4);
+  align-items: end;             /* figure sits at the bottom of its row */
+}
+
+@media (min-width: 44rem) {
+  .steckbrief__layout {
+    /* clipboard takes most space, figure sits beside it */
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}
+
+
+/* -------------------------------------------------------------------
+   Clipboard outer wrapper — provides relative context for the clip
+   ------------------------------------------------------------------- */
+.steckbrief__clipboard {
+  position: relative;
+  padding-top: 2.5rem;  /* room below the protruding clip */
+}
+
+
+/* -------------------------------------------------------------------
+   The physical clip at the top center of the clipboard
+   ------------------------------------------------------------------- */
+.steckbrief__clip {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: var(--radius-sm);   /* 8px */
+  border: 3px solid var(--accent-dk);
+  z-index: 1;
+}
+
+/* Inner hole — cream rectangle centered inside the clip */
+.steckbrief__clip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 14px;
+  background: var(--color-bg);      /* warm cream, matches clipboard fill */
+  border-radius: 3px;
+  opacity: 0.85;
+}
+
+
+/* -------------------------------------------------------------------
+   The clipboard card itself
+   ------------------------------------------------------------------- */
+.steckbrief__card {
+  background: var(--color-bg);      /* warm cream #fffcf8 */
+  border: 3px solid var(--accent);
+  border-radius: var(--radius);     /* 16px */
+  padding: var(--space-3) var(--space-3) var(--space-4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+}
+
+
+/* -------------------------------------------------------------------
+   Card title banner
+   ------------------------------------------------------------------- */
+.steckbrief__card-title {
+  background: var(--accent);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+  /* Reset heading defaults */
+  margin-top: 0;
+  line-height: 1.3;
+}
+
+
+/* -------------------------------------------------------------------
+   Definition list container
+   ------------------------------------------------------------------- */
+.steckbrief__data {
+  margin: 0;
+  padding: 0;
+}
+
+
+/* -------------------------------------------------------------------
+   Individual data rows (wrapping dt + dd together)
+   ------------------------------------------------------------------- */
+.steckbrief__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(124, 77, 170, 0.12);
+}
+
+.steckbrief__row:last-child {
+  border-bottom: none;
+}
+
+
+/* -------------------------------------------------------------------
+   Key / label (dt)
+   ------------------------------------------------------------------- */
+.steckbrief__key {
+  flex: 0 0 auto;
+  min-width: 140px;
+  font-size: var(--text-sm);
+  color: var(--color-ink-subtle);   /* #6b8a7e — WCAG AA on cream bg */
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;   /* reset browser dt margin */
+}
+
+
+/* -------------------------------------------------------------------
+   Value (dd)
+   ------------------------------------------------------------------- */
+.steckbrief__val {
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin: 0;   /* reset browser dd margin */
+  flex: 1;
+}
+
+
+/* -------------------------------------------------------------------
+   Shared icon style — used in both the data rows and the fav list
+   ------------------------------------------------------------------- */
+.steckbrief__icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  display: inline-block;
+  width: 1.4rem;
+  text-align: center;
+  line-height: 1;
+}
+
+
+/* -------------------------------------------------------------------
+   Motto block at the bottom of the clipboard
+   ------------------------------------------------------------------- */
+.steckbrief__motto {
+  margin-top: var(--space-3);
+  padding: 0.75rem;
+  background: rgba(124, 77, 170, 0.08);
+  border-radius: var(--radius-sm);  /* 8px */
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 0;
+}
+
+/* The em inside the motto inherits italic from parent */
+.steckbrief__motto em {
+  font-style: inherit;
+  line-height: 1.45;
+}
+
+.steckbrief__motto-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+
+/* -------------------------------------------------------------------
+   Character figure (center column on desktop)
+   ------------------------------------------------------------------- */
+.steckbrief__figure {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.steckbrief__figure-image {
+  max-height: 360px;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 12px 24px rgba(94, 50, 133, 0.20));
+  display: block;
+}
+
+
+/* -------------------------------------------------------------------
+   Responsive — narrow screens (max 700 px)
+   Stack: clipboard → figure in a single column
+   ------------------------------------------------------------------- */
+@media (max-width: 43.75rem) {
+  .steckbrief__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .steckbrief__figure {
+    order: 2;
+  }
+
+  .steckbrief__clipboard {
+    order: 1;
+  }
+
+  /* Smaller figure on mobile */
+  .steckbrief__figure-image {
+    max-height: 220px;
+  }
+
+  /* Center the figure on mobile */
+  .steckbrief__figure {
+    justify-content: center;
+  }
+
+  /* Narrower key column fits mobile widths */
+  .steckbrief__key {
+    min-width: 110px;
+  }
+}

@@ -1,0 +1,238 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+
+import { friends, upcomingFriends } from '../data/friends';
+import fanniCover from '../assets/fanni-fuchs/cover.png';
+import fanniHero from '../assets/figures/fanni-fuchs-welcome.png';
+
+const books = await getCollection('books');
+
+// Cover image per book id (only Fanni Fuchs so far).
+const covers: Record<string, ImageMetadata> = {
+  'fanni-fuchs': fanniCover,
+};
+---
+
+<BaseLayout title="Startseite">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero__content">
+      <h1 id="hero-heading" class="hero__title">Lautstarke Freunde</h1>
+      <p class="hero__lead">
+        Logopädische Kinderbücher, die spielerisch einzelne Laute trainieren.
+        Jeder Laut hat seinen eigenen tierischen Freund. Den Anfang macht
+        <strong>Fanni Fuchs</strong> mit dem Laut /f/.
+      </p>
+      <a href="/books/fanni-fuchs" class="hero__cta">Fannis Buch entdecken</a>
+      <p class="hero__secondary">
+        <a href="#books">Alle Bücher ansehen</a>
+      </p>
+    </div>
+
+    <div class="hero__figure" aria-hidden="true">
+      <!--
+        Character illustration of Fanni Fuchs.
+        Decorative element, freely positioned (sticks out of the hero frame).
+        aria-hidden, since the name appears in the body text.
+      -->
+      <Image
+        src={fanniHero}
+        alt=""
+        class="hero__figure-image"
+        widths={[320, 560, 800]}
+        sizes="(max-width: 600px) 320px, (max-width: 900px) 560px, 800px"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT THE PROJECT
+       ============================================================ -->
+  <section class="about" aria-labelledby="about-heading">
+    <h2 id="about-heading" class="about__title">Was sind Lautstarke Freunde?</h2>
+    <p class="about__text">
+      Kinder, die einen bestimmten Laut noch üben, brauchen spielerische
+      Unterstützung, zu Hause und in der Therapie. Unsere Bücher begleiten
+      sie dabei: eine Figur, ein Laut, viele Abenteuer. Der Ziellaut taucht
+      in der Geschichte immer wieder auf, ganz natürlich eingebettet.
+      Fachleute nennen das <strong>Inputspezifizierung</strong>: Je öfter ein
+      Kind einen Laut in Wörtern und Sätzen hört, desto besser kann es ihn
+      wahrnehmen und später selbst verwenden.
+    </p>
+    <ul class="about__features" role="list">
+      <li class="feature">
+        <span class="feature__icon" aria-hidden="true">🦊</span>
+        <span class="feature__text">Tierische Hauptfiguren für Ziellaute</span>
+      </li>
+      <li class="feature">
+        <span class="feature__icon" aria-hidden="true">🗣️</span>
+        <span class="feature__text">Von Logopäden entwickelt</span>
+      </li>
+      <li class="feature">
+        <span class="feature__icon" aria-hidden="true">🎨</span>
+        <span class="feature__text">Mit interaktiven Seiten</span>
+      </li>
+      <li class="feature">
+        <span class="feature__icon" aria-hidden="true">👨‍👩‍👧</span>
+        <span class="feature__text">Für Eltern und Therapeuten</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============================================================
+       BOOKS OVERVIEW
+       ============================================================ -->
+  <section id="books" class="books-overview" aria-labelledby="books-heading">
+    <h2 id="books-heading" class="books-overview__title">Unsere Bücher</h2>
+
+    {books.length === 0 ? (
+      <p class="books-overview__empty">
+        Bald geht's los. Das erste Buch ist in Arbeit.
+      </p>
+    ) : (
+      <ul class="books-list" role="list">
+        {books.map((book) => (
+          <li class="books-list__item">
+            <article class="book-card" aria-label={book.data.title}>
+              {covers[book.id] && (
+                <a href={`/books/${book.id}`} class="book-card__cover-link" tabindex="-1" aria-hidden="true">
+                  <Image
+                    src={covers[book.id]}
+                    alt=""
+                    class="book-card__cover"
+                    widths={[220, 360, 480]}
+                    sizes="(max-width: 600px) 70vw, 280px"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              )}
+              <header class="book-card__head">
+                <p class="book-card__sound" aria-label={`Ziellaut: ${book.data.sound}`}>
+                  Laut <strong>{book.data.sound}</strong>
+                </p>
+                <h3 class="book-card__title">{book.data.title}</h3>
+                {book.data.subtitle && (
+                  <p class="book-card__subtitle">{book.data.subtitle}</p>
+                )}
+              </header>
+
+              {book.data.ageRecommendation && (
+                <p class="book-card__age">
+                  Alter: <span>{book.data.ageRecommendation}</span>
+                </p>
+              )}
+
+              <a
+                href={`/books/${book.id}`}
+                class="book-card__link"
+                aria-label={`Mehr zu ${book.data.title}`}
+              >
+                Zum Buch
+              </a>
+            </article>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <p class="books-overview__outlook">
+      Weitere Freunde für weitere Laute kommen bald:
+      {upcomingFriends.map((f, i) => (
+        <>{i > 0 ? ' und ' : ''}<strong>{f.name}</strong> (Laut {f.sound})</>
+      ))}.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       FRIENDS ENSEMBLE
+       ============================================================ -->
+  <section id="friends" class="friends" aria-labelledby="friends-heading">
+    <h2 id="friends-heading" class="friends__title">Lern die Freunde kennen</h2>
+    <p class="friends__lead">
+      Jeder Laut bekommt seinen eigenen tierischen Freund. Fanni Fuchs macht den
+      Anfang, Karlo Kater und Rudi Raupe folgen.
+    </p>
+    <ul class="friends__grid" role="list">
+      {friends.map((friend) => (
+        <li class:list={['friend-card', friend.status === 'upcoming' && 'friend-card--soon']}>
+          <div class="friend-card__image-area">
+            <Image
+              src={friend.image}
+              alt={friend.alt}
+              class="friend-card__image"
+              widths={[160, 240, 320]}
+              sizes="(max-width: 600px) 40vw, 220px"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p class="friend-card__sound">Laut <strong>{friend.sound}</strong></p>
+          <h3 class="friend-card__name">{friend.name}</h3>
+          <p class="friend-card__text">{friend.description}</p>
+          {friend.status === 'available' && friend.href ? (
+            <a class="friend-card__link" href={friend.href}>Zum Buch</a>
+          ) : (
+            <span class="friend-card__badge">Bald</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ============================================================
+       AUDIENCES
+       ============================================================ -->
+  <section class="audiences" aria-labelledby="audiences-heading">
+    <h2 id="audiences-heading" class="audiences__title">Für wen sind die Bücher?</h2>
+    <div class="audiences__grid">
+      <div class="audience">
+        <h3 class="audience__name">Eltern</h3>
+        <p class="audience__text">
+          Gemeinsam lesen und dabei spielerisch üben, ganz ohne Therapieatmosphäre.
+        </p>
+      </div>
+      <div class="audience">
+        <h3 class="audience__name">Logopäd:innen</h3>
+        <p class="audience__text">
+          Ergänzendes Material für die Übungseinheit oder als Hausaufgabe.
+        </p>
+      </div>
+      <div class="audience">
+        <h3 class="audience__name">Erzieher:innen</h3>
+        <p class="audience__text">
+          Im Alltag der Kita als Vorleserunde mit Sprachfördereffekt nutzbar.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       Static-friendly contact point: a plain mailto, no form / no
+       third-party service, so no extra GDPR processing is introduced.
+       The same address is the §5 DDG contact for the Impressum.
+       ============================================================ -->
+  <section id="contact" class="contact" aria-labelledby="contact-heading">
+    <h2 id="contact-heading" class="contact__title">Kontakt</h2>
+    <p class="contact__intro">
+      Fragen, Feedback oder Interesse an unseren Büchern? Schreib uns gern.
+      Wir freuen uns über jede Nachricht.
+    </p>
+
+    <div class="contact__card">
+      <p class="contact__label">Schreib uns eine E-Mail:</p>
+      <a class="hero__cta contact__email" href="mailto:info@lautstarke-freunde.de">
+        info@lautstarke-freunde.de
+      </a>
+    </div>
+  </section>
+
+</BaseLayout>

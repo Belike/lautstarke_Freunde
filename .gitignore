@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Astro / Build-Ausgabe
+code/dist/
+code/.astro/
+dist/
+.astro/
+
+# Umgebungsvariablen / Secrets — NIEMALS committen
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Temporär
+*.tmp
+*.bak
+
+# Private editorial content — keep local, NEVER publish (repo is/becomes public)
+book-content/
+grafiken/Fanni Fuchs und das Fussballfest/
