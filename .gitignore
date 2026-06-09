@@ -35,6 +35,7 @@ desktop.ini
 *.tmp
 *.bak
 
-# Private editorial content — keep local, NEVER publish (repo is/becomes public)
-book-content/
+# Private material — full book illustrations stay local, NEVER publish.
+# NOTE: book-content/ is intentionally NOT ignored — it holds the public
+# marketing blurbs/metadata the website renders (cover + description).
 grafiken/Fanni Fuchs und das Fussballfest/
