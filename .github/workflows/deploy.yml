@@ -1,13 +1,16 @@
-name: Deploy auf GitHub Pages
+name: Deploy to GitHub Pages
 
-# Veröffentlicht die Astro-Seite aus dem Unterordner `code/` auf GitHub Pages.
-# Läuft bei Push auf `main` oder manuell.
+# Publishes the Astro site from the `code/` subdirectory to GitHub Pages.
+# Runs on push to `main` or manually via workflow_dispatch.
 #
-# WICHTIG (vom cicd-Agent zu erledigen, einmalig):
-#   GitHub → Repo → Settings → Pages → "Source" auf "GitHub Actions" stellen.
+# ONE-TIME SETUP (done by Norma in the GitHub UI, not by this workflow):
+#   Repo → Settings → Pages → Source → "GitHub Actions"
 #
-# Freigabe-Regel (siehe orchestrator): vor dem ersten produktiven Deploy
-# müssen qa-tester ("QA bestanden") und legal ("Go") vorliegen.
+# Release gate: before the first production deploy, qa-tester ("QA passed")
+# and legal ("Go") must give the green light (see orchestrator / CLAUDE.md).
+#
+# Security: only the compiled dist/ artifact is deployed — source, book
+# content, and all private files never reach the Pages environment.
 
 on:
   push:
@@ -19,7 +22,7 @@ permissions:
   pages: write
   id-token: write
 
-# Gleichzeitige Deploys vermeiden; laufende nicht abbrechen.
+# Prevent overlapping deploys; do not cancel a running deploy.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -28,13 +31,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Astro bauen & Pages-Artefakt erzeugen
-        uses: withastro/action@v3
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
         with:
-          path: code          # Astro-Projekt liegt im Unterordner code/
-          node-version: 22
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: code/package-lock.json
+
+      - name: Install dependencies
+        working-directory: code
+        run: npm ci
+
+      - name: Build Astro site
+        working-directory: code
+        run: npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: code/dist
 
   deploy:
     needs: build
@@ -43,6 +61,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Auf GitHub Pages deployen
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
