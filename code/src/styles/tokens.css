@@ -72,7 +72,36 @@
 
   --accent-fanni:    #7c4daa;   /* violet — Fanni Fuchs / sound /f/         */
   --accent-fanni-dk: #5e3285;   /* darker violet for hover states           */
-  /* Further character accents go here: --accent-<character>: …;            */
+
+  /* ------------------------------------------------------------------
+     CHARACTER COLORS — Karlo Kater (cobalt blue, matches cover title)
+     ------------------------------------------------------------------ */
+  --color-karlo-50:  #eff4fd;
+  --color-karlo-100: #d5e3f8;
+  --color-karlo-200: #aac7f1;
+  --color-karlo-300: #6fa2e6;
+  --color-karlo-400: #3d7fd8;
+  --color-karlo-500: #2563c4;   /* Karlo blue — primary tone               */
+  --color-karlo-600: #1a4d9e;
+  --color-karlo-700: #113577;
+
+  --accent-karlo:    #2563c4;   /* cobalt blue — Karlo Kater / sound /k/   */
+  --accent-karlo-dk: #1a4d9e;   /* darker blue for hover states            */
+
+  /* ------------------------------------------------------------------
+     CHARACTER COLORS — Rudi Raupe (forest green, matches cover title)
+     ------------------------------------------------------------------ */
+  --color-rudi-50:  #edf7ef;
+  --color-rudi-100: #ceebd3;
+  --color-rudi-200: #9dd4a6;
+  --color-rudi-300: #66b873;
+  --color-rudi-400: #3d9e50;
+  --color-rudi-500: #2d8a3e;   /* Rudi green — primary tone                */
+  --color-rudi-600: #1f6a2d;
+  --color-rudi-700: #134d1f;
+
+  --accent-rudi:    #2d8a3e;   /* forest green — Rudi Raupe / sound /r/    */
+  --accent-rudi-dk: #1f6a2d;   /* darker green for hover states            */
 
   /*
    * --accent is the actively used page accent.

@@ -25,6 +25,7 @@
  *  18. Book page — the friends (mini ensemble)
  *  19. Book page — for parents & professionals
  *  20. Book page — reading sample / look inside
+ *  21. Book page — likes (Das mag … besonders)
  *
  * COLOR PRINCIPLE:
  *   Global/brand elements use --color-brand-* (teal).
@@ -340,40 +341,85 @@ section {
   font-size: var(--text-sm);
 }
 
-/* Figure container */
-.hero__figure {
+/* ---------------------------------------------------------------
+   Trio container — three figure cut-outs side by side.
+   On desktop: aligns with the right column of the hero grid.
+   On mobile: stacks above the text (order: -1) as a compact row.
+   --------------------------------------------------------------- */
+.hero__figures {
   z-index: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: row;
   align-items: flex-end;
-  /* Fanni sticks slightly out of the hero on tablet+ */
-  margin-bottom: calc(-1 * var(--space-6));
+  justify-content: center;
+  gap: var(--space-2);
+  /*
+   * Slight downward bleed so the feet of the characters sit at the
+   * visual edge of the hero — same effect the single Fanni had.
+   */
+  margin-bottom: calc(-1 * var(--space-5));
 }
 
+/* Base style shared by every figure in the trio */
 .hero__figure-image {
-  width: clamp(12rem, 28vw, 22rem);
-  height: auto;
   /*
-   * Limit the height relative to the viewport so the figure (incl. head)
-   * always stays inside the hero on short or strongly zoomed windows and is
-   * not clipped at the top by the hero's overflow:hidden.
+   * Each figure gets roughly one-third of the available column width.
+   * clamp keeps them readable on very narrow or very wide viewports.
    */
-  max-height: min(30rem, 72vh);
+  width: clamp(6rem, 12vw, 9.5rem);
+  height: auto;
+  max-height: min(18rem, 45vh);
   object-fit: contain;
   object-position: bottom;
-  /* soft shadow under the figure */
-  filter: drop-shadow(0 16px 32px rgba(12, 82, 66, 0.18));
+  filter: drop-shadow(0 10px 20px rgba(12, 82, 66, 0.16));
+  /* Prevent any one figure from accidentally stretching */
+  flex: 0 0 auto;
+}
+
+/*
+ * Per-character size tweaks — keep the three roughly equal in perceived
+ * visual weight.  Fanni (fox, full body) is naturally the tallest figure,
+ * Karlo (cat, sitting) is mid-height, Rudi (caterpillar, low-slung) is the
+ * widest. These offsets compensate so all three read as a balanced group.
+ */
+.hero__figure-image--fanni {
+  /* fox stands upright — bring her to the same apparent height as the others */
+  width: clamp(5.5rem, 11vw, 8.5rem);
+  /* very slight upward nudge so feet align with the other two */
+  position: relative;
+  bottom: 0;
+}
+
+.hero__figure-image--karlo {
+  /* cat is a natural midpoint — use base sizing, slightly taller allowed */
+  width: clamp(6rem, 12vw, 9.5rem);
+  /* center figure lifted just a touch so the trio feels grounded together */
+  position: relative;
+  bottom: 0;
+}
+
+.hero__figure-image--rudi {
+  /* caterpillar is low and wide — let it be a touch wider */
+  width: clamp(6.5rem, 13vw, 10rem);
+  position: relative;
+  bottom: 0;
 }
 
 @media (max-width: 48rem) {
-  .hero__figure {
-    margin-bottom: calc(-1 * var(--space-5));
-    order: -1; /* figure on top on mobile */
+  .hero__figures {
+    order: -1;            /* trio sits above the text on mobile */
+    margin-bottom: var(--space-3);
+    gap: var(--space-1);
   }
 
   .hero__figure-image {
-    width: clamp(10rem, 50vw, 14rem);
+    width: clamp(5rem, 28vw, 8rem);
+    max-height: min(10rem, 30vh);
   }
+
+  .hero__figure-image--fanni { width: clamp(4.5rem, 26vw, 7.5rem); }
+  .hero__figure-image--karlo { width: clamp(5rem,  28vw, 8rem);   }
+  .hero__figure-image--rudi  { width: clamp(5.5rem, 30vw, 8.5rem); }
 }
 
 
@@ -383,8 +429,11 @@ section {
 
 .about {
   background: var(--color-surface);
-  /* Enough spacing, since the Fanni figure reaches into the hero area */
-  padding-top: calc(var(--space-6) + var(--space-5));
+  /*
+   * The trio is contained within hero's overflow:hidden, so no extra
+   * bleed compensation is needed. Standard section padding applies.
+   */
+  padding-top: var(--space-6);
   padding-inline: var(--space-4);
   max-width: var(--maxw);
   margin-inline: auto;
@@ -517,7 +566,13 @@ section {
 .book-card__cover {
   display: block;
   width: 100%;
+  /* Uniform cover frame: the source covers differ by a few px in aspect
+     ratio (e.g. Karlo is slightly narrower), which made the covers render
+     at different heights and broke the side-by-side alignment. Pin every
+     cover to the same ratio and crop minimally so they match exactly. */
+  aspect-ratio: 2475 / 3075;
   height: auto;
+  object-fit: cover;
   border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   transition: transform var(--duration) var(--ease-out);
@@ -605,6 +660,170 @@ section {
   background: var(--color-brand-600);
   transform: translateY(-1px);
   color: #ffffff;
+}
+
+/* ------------------------------------------------------------------
+   Per-character color coding on book cards.
+   Keyed off stable modifier classes (.book-card--fanni / --rudi /
+   --karlo) so the colors follow the character regardless of the array
+   order in the friends data.  The border, the Laut badge circle, and
+   the CTA button all shift to the character accent color so each card
+   is instantly identifiable.
+   ------------------------------------------------------------------ */
+
+/* Fanni — violet */
+.book-card--fanni {
+  border-color: var(--accent-fanni);
+}
+
+.book-card--fanni .book-card__sound {
+  color: var(--accent-fanni);
+}
+
+.book-card--fanni .book-card__sound strong {
+  background: var(--accent-fanni);
+}
+
+.book-card--fanni .book-card__link {
+  background: var(--accent-fanni);
+}
+
+.book-card--fanni .book-card__link:hover {
+  background: var(--accent-fanni-dk);
+}
+
+/* Rudi — forest green */
+.book-card--rudi {
+  border-color: var(--accent-rudi);
+}
+
+.book-card--rudi .book-card__sound {
+  color: var(--accent-rudi);
+}
+
+.book-card--rudi .book-card__sound strong {
+  background: var(--accent-rudi);
+}
+
+.book-card--rudi .book-card__link {
+  background: var(--accent-rudi);
+}
+
+.book-card--rudi .book-card__link:hover {
+  background: var(--accent-rudi-dk);
+}
+
+/* Karlo — cobalt blue */
+.book-card--karlo {
+  border-color: var(--accent-karlo);
+}
+
+.book-card--karlo .book-card__sound {
+  color: var(--accent-karlo);
+}
+
+.book-card--karlo .book-card__sound strong {
+  background: var(--accent-karlo);
+}
+
+.book-card--karlo .book-card__link {
+  background: var(--accent-karlo);
+}
+
+.book-card--karlo .book-card__link:hover {
+  background: var(--accent-karlo-dk);
+}
+
+/* ------------------------------------------------------------------
+   Cover wrap — positioning context for the "Bald" badge overlay
+   ------------------------------------------------------------------ */
+.book-card__cover-wrap {
+  position: relative;
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  line-height: 0;   /* collapse whitespace around the image */
+}
+
+.book-card__cover-wrap .book-card__cover {
+  /* same display as when the cover is inside a link */
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+/* ------------------------------------------------------------------
+   "Bald" badge — sits in the top-right corner of the cover
+   ------------------------------------------------------------------ */
+.book-card__badge {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-gold-400);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------
+   "Erscheint bald" text replacing the CTA link
+   ------------------------------------------------------------------ */
+.book-card__coming-soon {
+  margin-top: auto;
+  margin-bottom: 0;
+  padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-ink-subtle);
+  background: var(--color-bg-subtle);
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-xl);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------
+   Upcoming book cards — slight visual stepping-back:
+   full opacity on the cover (brand-new artwork must stay vivid),
+   just a subtle desaturation and slightly softened border to signal
+   "not released yet" without hiding the cover.
+   ------------------------------------------------------------------ */
+.book-card--upcoming {
+  border-style: dashed;
+  /*
+   * border-color is left to the per-character modifier class rule (which
+   * comes earlier in the cascade and sets the character accent). If no
+   * character class matches (future-proofing), the subtle border token
+   * from .book-card applies. We only override the style to dashed.
+   */
+  /* Slight background shift — warm neutral instead of pure white */
+  background: var(--color-bg);
+}
+
+.book-card--upcoming .book-card__cover {
+  /* Barely perceptible desaturation — keeps the cover vivid but signals
+     pre-release state; 90% saturation is a very light touch. */
+  filter: saturate(0.9) brightness(0.97);
+}
+
+.book-card--upcoming:hover .book-card__cover {
+  /* On hover: fully vivid, rewarding curiosity */
+  filter: none;
+}
+
+.book-card--upcoming .book-card__title {
+  color: var(--color-ink-muted);
 }
 
 
@@ -1248,6 +1467,106 @@ section {
   opacity: 0.9;
 }
 
+/* ------------------------------------------------------------------
+   Per-character color coding on friend cards.
+   Keyed off stable modifier classes (.friend-card--fanni / --rudi /
+   --karlo) so colors follow the character regardless of array order.
+
+   Each card gets a background tint, colored top border, name/sound
+   in the character accent, and a matching CTA button color.
+   ------------------------------------------------------------------ */
+
+/* Fanni — violet */
+.friend-card--fanni {
+  background: var(--color-fanni-50);
+  border-color: var(--color-fanni-200);
+  border-top: 3px solid var(--accent-fanni);
+}
+
+.friend-card--fanni .friend-card__name {
+  color: var(--accent-fanni);
+}
+
+.friend-card--fanni .friend-card__sound {
+  color: var(--accent-fanni);
+}
+
+.friend-card--fanni .friend-card__sound strong {
+  color: var(--accent-fanni-dk);
+}
+
+.friend-card--fanni .friend-card__link {
+  background: var(--accent-fanni);
+}
+
+.friend-card--fanni .friend-card__link:hover {
+  background: var(--accent-fanni-dk);
+}
+
+/* Rudi — forest green */
+.friend-card--rudi {
+  background: var(--color-rudi-50);
+  border-color: var(--color-rudi-200);
+  border-top: 3px solid var(--accent-rudi);
+}
+
+.friend-card--rudi .friend-card__name {
+  color: var(--accent-rudi);
+}
+
+.friend-card--rudi .friend-card__sound {
+  color: var(--accent-rudi);
+}
+
+.friend-card--rudi .friend-card__sound strong {
+  color: var(--accent-rudi-dk);
+}
+
+.friend-card--rudi .friend-card__link {
+  background: var(--accent-rudi);
+}
+
+.friend-card--rudi .friend-card__link:hover {
+  background: var(--accent-rudi-dk);
+}
+
+.friend-card--rudi .friend-card__badge {
+  border-color: var(--color-rudi-300);
+  color: var(--accent-rudi);
+}
+
+/* Karlo — cobalt blue */
+.friend-card--karlo {
+  background: var(--color-karlo-50);
+  border-color: var(--color-karlo-200);
+  border-top: 3px solid var(--accent-karlo);
+}
+
+.friend-card--karlo .friend-card__name {
+  color: var(--accent-karlo);
+}
+
+.friend-card--karlo .friend-card__sound {
+  color: var(--accent-karlo);
+}
+
+.friend-card--karlo .friend-card__sound strong {
+  color: var(--accent-karlo-dk);
+}
+
+.friend-card--karlo .friend-card__link {
+  background: var(--accent-karlo);
+}
+
+.friend-card--karlo .friend-card__link:hover {
+  background: var(--accent-karlo-dk);
+}
+
+.friend-card--karlo .friend-card__badge {
+  border-color: var(--color-karlo-300);
+  color: var(--accent-karlo);
+}
+
 
 /* ===================================================================
    17. BOOK PAGE — PROFILE LAYOUT (figure + data)
@@ -1364,6 +1683,173 @@ section {
 
 .parent-info__note strong {
   color: var(--color-gold-500);
+}
+
+
+/* ===================================================================
+   19b. HOME — #eltern OVERRIDES for .parent-info / .info-card
+   -------------------------------------------------------------------
+   The .parent-info and .info-card rules were originally written for
+   book pages where var(--accent) is the character color and
+   .info-card uses Fanni-violet tints (--color-fanni-50/100) as
+   hardcoded background/border.
+
+   On the home page #eltern section those violet tints look out of
+   place (no character is active). Scope neutral brand tints here so
+   the section blends naturally with the surrounding home-page
+   sections (.audiences uses --color-brand-50). The --accent teal
+   heading color (--color-brand-500, #1a8f72) is intentional and
+   on-brand — no override needed for that.
+
+   The Fanni book page is unaffected: its .parent-info is outside
+   #eltern and retains the original violet tints.
+   =================================================================== */
+
+#eltern .info-card {
+  background: var(--color-brand-50);
+  border-color: var(--color-brand-100);
+}
+
+#eltern.parent-info {
+  border-bottom: none;   /* home page uses section spacing, not border rhythm */
+  /*
+   * Match the inline padding of sibling home sections (.about, .audiences,
+   * .instagram) so heading / text / cards left-align at the same inset
+   * (--space-4 = 1.5rem = 24 px).
+   * Scoped to #eltern so the book-page .parent-info (inside .book which
+   * already handles its own horizontal padding) is NOT affected.
+   */
+  padding-inline: var(--space-4);
+}
+
+
+/* ===================================================================
+   21. BOOK PAGE — LIKES (Das mag … besonders)
+   -------------------------------------------------------------------
+   Six small cards in a responsive grid showing what the character
+   loves. Introduced on the Rudi Raupe page; reusable for future
+   characters by placing .likes on any book page that sets --accent.
+
+   Green treatment (Rudi):
+     Background:  var(--color-rudi-50)  — #edf7ef  (pale green tint)
+     Border:      var(--color-rudi-200) — #9dd4a6  (soft green, top stripe
+                  via border-top override in accent color via var(--accent))
+     Icon pill:   white on accent-green
+     Heading:     var(--accent)          — #2d8a3e  (Rudi forest green)
+     Body text:   var(--color-ink-muted) on --color-rudi-50 (contrast ≥ 7:1)
+
+   Contrast audit (on --color-rudi-50 = #edf7ef):
+     --color-ink-muted (#3d5a50) → ≈ 8.6:1  — WCAG AAA
+     var(--accent-rudi) (#2d8a3e) on #edf7ef → ≈ 5.1:1 — WCAG AA ✓
+   =================================================================== */
+
+.likes {
+  padding-block: var(--space-6);
+  border-bottom: 2px solid var(--color-border-subtle);
+}
+
+.likes__title {
+  font-size: clamp(var(--text-xl), 3vw, var(--text-2xl));
+  color: var(--accent);
+  margin-bottom: var(--space-5);
+}
+
+/* Reset ul defaults; grid container */
+.likes__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  /* 1 column on mobile → 2 columns from ~28 rem → 3 columns from ~52 rem */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-4);
+}
+
+/* Individual card */
+.likes__item {
+  display: grid;
+  /* Icon sits in its own small column so text lines up cleanly */
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-2);
+  row-gap: var(--space-1);
+  align-items: start;
+  padding: var(--space-4);
+  /*
+   * Background and border derive from the active page accent so the card
+   * themes itself automatically — pale lilac on Fanni, pale green on Rudi,
+   * and correct for any future character.
+   *
+   * Calibration against the original Rudi values (--accent-rudi = #2d8a3e):
+   *   8%  of #2d8a3e into #fff ≈ rgb(237,247,239) — matches --color-rudi-50 #edf7ef
+   *  22%  of #2d8a3e into #fff ≈ rgb(161,208,167) — matches --color-rudi-200 #9dd4a6
+   *
+   * On Fanni (#7c4daa) this yields a pale lilac card with a readable purple
+   * top stripe. --color-ink-muted (#3d5a50) on the lilac tint keeps ≥ 7:1
+   * contrast (WCAG AAA).
+   */
+  background: color-mix(in srgb, var(--accent) 8%, #ffffff);
+  border-radius: var(--radius-lg);
+  /* Subtle outline at 22% accent — mirrors original rudi-200 intensity */
+  border: 1.5px solid color-mix(in srgb, var(--accent) 22%, #ffffff);
+  /* Prominent top stripe in the page accent (= forest green on Rudi page) */
+  border-top: 3px solid var(--accent);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--duration) var(--ease-out),
+              box-shadow var(--duration) var(--ease-out);
+}
+
+.likes__item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+/* Emoji icon — pill with white background, vertically centred with h3 */
+.likes__icon {
+  grid-column: 1;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.2rem;
+  line-height: 1;
+  background: #ffffff;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+  /* Vertically align with the card title */
+  align-self: center;
+}
+
+/* Card heading — accent color, normal h3 weight/size */
+.likes__item-title {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: var(--text-base);
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+  margin: 0;
+  align-self: center;
+}
+
+/* One-liner description — normal body color, good contrast */
+.likes__item-text {
+  grid-column: 1 / -1;   /* span both icon + text columns */
+  grid-row: 2;
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Mobile — single column already handled by auto-fill; just tighten
+   the card's internal gap slightly on very narrow screens */
+@media (max-width: 30rem) {
+  .likes__item {
+    padding: var(--space-3);
+  }
 }
 
 

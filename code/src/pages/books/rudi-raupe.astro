@@ -1,0 +1,216 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+
+import cover from '../../assets/Rudi Raupe/0cover.png';
+import rudiFigure from '../../assets/figures/rudi-raupe.png';
+
+// Fetch the markdown body from the books content collection.
+// The route /books/rudi-raupe is owned by this standalone page, not by
+// [...slug].astro (which explicitly excludes rudi-raupe to avoid a
+// duplicate-route build error).
+const rudi = await getEntry('books', 'rudi-raupe');
+const { Content } = await render(rudi);
+---
+
+<BaseLayout
+  title="Rudi Raupe"
+  description="Rudi Raupe und die verlorene Rose: ein logopädisches Kinderbuch für den Laut /r/ ab 3 Jahren."
+  accent="var(--accent-rudi)"
+>
+  <article class="book" aria-labelledby="book-title">
+
+    <!-- ============================================================
+         BOOK HEADER
+         ============================================================ -->
+    <header class="book__head">
+      <nav class="book__breadcrumb" aria-label="Brotkrumennavigation">
+        <ol class="breadcrumb__list" role="list">
+          <li class="breadcrumb__item">
+            <a href="/">Start</a>
+          </li>
+          <li class="breadcrumb__item" aria-hidden="true">›</li>
+          <li class="breadcrumb__item">
+            <a href="/#books">Bücher</a>
+          </li>
+          <li class="breadcrumb__item" aria-hidden="true">›</li>
+          <li class="breadcrumb__item" aria-current="page">
+            Rudi Raupe
+          </li>
+        </ol>
+      </nav>
+
+      <p class="book__sound-badge" aria-label={"Ziellaut dieses Buches: /r/"}>
+        Laut <strong>/r/</strong>
+      </p>
+      <h1 id="book-title" class="book__title">Rudi Raupe</h1>
+      <p class="book__subtitle">Der neugierige Entdecker für den Laut /r/</p>
+      <p class="book__age">
+        Altersempfehlung: <span>ab 3 Jahren</span>
+      </p>
+    </header>
+
+    <!-- ============================================================
+         COVER
+         ============================================================ -->
+    <div class="book__cover">
+      <Image
+        src={cover}
+        alt={"Cover von „Rudi Raupe und die verlorene Rose“: Rudi Raupe mit lila Mütze hält eine rote Rose auf einem Gartenweg."}
+        class="book__cover-image"
+        widths={[360, 600, 900]}
+        sizes="(max-width: 600px) 90vw, (max-width: 1100px) 360px, 448px"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+
+    <!-- ============================================================
+         BOOK DESCRIPTION
+         ============================================================ -->
+    <section class="book__description" aria-labelledby="description-heading">
+      <h2 id="description-heading" class="book__description-title">
+        Worum geht es?
+      </h2>
+      <div class="book__content">
+        <Content />
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHARACTER PROFILE / STECKBRIEF
+         ============================================================ -->
+    <section class="steckbrief" aria-labelledby="steckbrief-heading">
+      <h2 id="steckbrief-heading" class="steckbrief__headline">Das ist Rudi Raupe!</h2>
+
+      <div class="steckbrief__layout">
+
+        <!-- Clipboard card (LEFT) -->
+        <div class="steckbrief__clipboard">
+          <div class="steckbrief__clip" aria-hidden="true"></div>
+          <div class="steckbrief__card">
+            <h3 class="steckbrief__card-title">Rudi Raupe Steckbrief</h3>
+            <dl class="steckbrief__data">
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🐛</span>Name</dt>
+                <dd class="steckbrief__val">Rudi Raupe</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🎂</span>Alter</dt>
+                <dd class="steckbrief__val">Drei</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🌈</span>Wohnort</dt>
+                <dd class="steckbrief__val">Regenbogenwald</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">💚</span>Farbe</dt>
+                <dd class="steckbrief__val">Grün mit lila Punkten</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🍃</span>Lieblingsessen</dt>
+                <dd class="steckbrief__val">Frische Blätter und knackige Grashalme</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🦌</span>Lieblingstier</dt>
+                <dd class="steckbrief__val">Reh</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🔍</span>Lieblingsfach</dt>
+                <dd class="steckbrief__val">Entdecken und Fragen stellen</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">💧</span>Lieblingsgetränk</dt>
+                <dd class="steckbrief__val">Morgentau</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🌸</span>Lieblingsort</dt>
+                <dd class="steckbrief__val">Die Blumenwiese am Bach</dd>
+              </div>
+            </dl>
+            <p class="steckbrief__motto">
+              <span class="steckbrief__motto-icon" aria-hidden="true">⭐</span>
+              <em>„Ich folge der Spur und finde meinen Weg!"</em>
+            </p>
+          </div>
+        </div>
+
+        <!-- Rudi figure (RIGHT) -->
+        <div class="steckbrief__figure" aria-hidden="true">
+          <Image
+            src={rudiFigure}
+            alt=""
+            class="steckbrief__figure-image"
+            widths={[240, 360, 480]}
+            sizes="(max-width: 600px) 50vw, 300px"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         DAS MAG RUDI BESONDERS
+         New section — designer: theme with --accent-rudi / green palette.
+         BEM block: likes
+         Classes: .likes, .likes__title, .likes__grid, .likes__item,
+                  .likes__item-title, .likes__item-text, .likes__icon
+         ============================================================ -->
+    <section class="likes" aria-labelledby="likes-heading">
+      <h2 id="likes-heading" class="likes__title">Das mag Rudi besonders</h2>
+
+      <ul class="likes__grid" role="list">
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🌿</span>
+          <h3 class="likes__item-title">Abenteuer erleben</h3>
+          <p class="likes__item-text">Rudi liebt es, Neues zu entdecken!</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">❓</span>
+          <h3 class="likes__item-title">Fragen stellen</h3>
+          <p class="likes__item-text">Er möchte alles wissen und versteht die Welt.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🤝</span>
+          <h3 class="likes__item-title">Freunde haben</h3>
+          <p class="likes__item-text">Rudi hilft gern und hat tolle Freunde.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🌳</span>
+          <h3 class="likes__item-title">Die Natur</h3>
+          <p class="likes__item-text">Blumen, Bäume und der Bach. Rudi liebt es draußen!</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🌹</span>
+          <h3 class="likes__item-title">Romantik</h3>
+          <p class="likes__item-text">Rudi ist ein echter Romantiker und beschenkt gerne seine Freundin Rosi.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🌺</span>
+          <h3 class="likes__item-title">Seine rote Rose</h3>
+          <p class="likes__item-text">Rudi macht sich auf die Suche nach einer ganz besonderen Rose.</p>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ============================================================
+         BACK LINK
+         ============================================================ -->
+    <nav class="book__navigation" aria-label="Seitennavigation">
+      <a href="/#books" class="book__back-link">
+        &#8592; Zurück zur Bücherübersicht
+      </a>
+    </nav>
+
+  </article>
+</BaseLayout>

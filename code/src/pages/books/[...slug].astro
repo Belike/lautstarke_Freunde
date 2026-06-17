@@ -8,7 +8,12 @@ import fanniPointing from '../../assets/figures/fanni-fuchs-pointing.png';
 
 export async function getStaticPaths() {
   const books = await getCollection('books');
-  return books.map((book) => ({
+  // rudi-raupe is excluded here because it has its own dedicated standalone
+  // page at code/src/pages/books/rudi-raupe.astro, which owns the /books/rudi-raupe
+  // route and renders the markdown body itself via getEntry/render. Generating
+  // the same route here would cause a duplicate-route build error.
+  const filteredBooks = books.filter((b) => b.id !== 'rudi-raupe');
+  return filteredBooks.map((book) => ({
     params: { slug: book.id },
     props: { book },
   }));
@@ -20,14 +25,6 @@ const { Content } = await render(book);
 // Decides whether Fanni-Fuchs-specific content is rendered.
 const isFanniFuchs = book.id === 'fanni-fuchs';
 
-// Tips for parents & professionals (from the book's parent info).
-const parentTips = [
-  'Lesen Sie die Geschichte regelmäßig vor.',
-  'Sprechen Sie die Wörter ganz natürlich.',
-  'Betonen Sie den Ziellaut nicht übertrieben.',
-  'Haben Sie Spaß an der Geschichte.',
-  'Lassen Sie Ihr Kind zuhören, zeigen oder mitsprechen.',
-];
 ---
 
 <BaseLayout
@@ -178,47 +175,55 @@ const parentTips = [
     )}
 
     <!-- ============================================================
-         FOR PARENTS & PROFESSIONALS (parent info)
+         DAS MAG FANNI BESONDERS
+         Designer: theme with --accent-fanni / purple palette.
+         BEM block: likes
+         Classes: .likes, .likes__title, .likes__grid, .likes__item,
+                  .likes__item-title, .likes__item-text, .likes__icon
          ============================================================ -->
     {isFanniFuchs && (
-      <section class="parent-info" aria-labelledby="parent-info-heading">
-        <h2 id="parent-info-heading" class="parent-info__title">
-          Für Eltern &amp; Fachleute
-        </h2>
-        <p class="parent-info__lead">
-          Dieses Buch wurde entwickelt, um Kinder während einer logopädischen
-          Behandlung spielerisch zu begleiten. Im Mittelpunkt steht der Laut
-          <strong> /f/</strong>, mit vielen Wörtern wie <em>Fanni, Fuchs,
-          Fußball, Fahne, Feld, finden</em> und <em>fantastisch</em>.
-        </p>
+      <section class="likes" aria-labelledby="likes-heading">
+        <h2 id="likes-heading" class="likes__title">Das mag Fanni besonders</h2>
 
-        <div class="parent-info__cards">
-          <div class="info-card">
-            <h3 class="info-card__title">So unterstützen Sie Ihr Kind</h3>
-            <ul class="info-card__list" role="list">
-              {parentTips.map((tip) => (
-                <li>{tip}</li>
-              ))}
-            </ul>
-          </div>
+        <ul class="likes__grid" role="list">
 
-          <div class="info-card">
-            <h3 class="info-card__title">Was muss mein Kind können?</h3>
-            <p class="info-card__big">Gar nichts!</p>
-            <p>
-              Ihr Kind muss die Wörter nicht nachsprechen und keine Aufgaben
-              lösen. Schon das Zuhören hilft dabei, den Laut besser
-              kennenzulernen. Lesen Sie die Geschichte ruhig mehrfach.
-              Kinder lieben Wiederholungen.
-            </p>
-          </div>
-        </div>
+          <li class="likes__item">
+            <span class="likes__icon" aria-hidden="true">⚽</span>
+            <h3 class="likes__item-title">Fußball spielen</h3>
+            <p class="likes__item-text">Fanni findet Fußball einfach fantastisch!</p>
+          </li>
 
-        <p class="parent-info__note">
-          <strong>Hinweis:</strong> Dieses Buch ersetzt keine logopädische
-          Behandlung. Es wurde als spielerische Ergänzung für den Alltag
-          entwickelt.
-        </p>
+          <li class="likes__item">
+            <span class="likes__icon" aria-hidden="true">🤝</span>
+            <h3 class="likes__item-title">Freunde finden</h3>
+            <p class="likes__item-text">Beim Fußballfest trifft Fanni viele Freunde.</p>
+          </li>
+
+          <li class="likes__item">
+            <span class="likes__icon" aria-hidden="true">⭐</span>
+            <h3 class="likes__item-title">Fair sein und Teamgeist</h3>
+            <p class="likes__item-text">Fair spielen ist Fanni das Allerwichtigste.</p>
+          </li>
+
+          <li class="likes__item">
+            <span class="likes__icon" aria-hidden="true">🌳</span>
+            <h3 class="likes__item-title">Draußen auf dem Fußballplatz</h3>
+            <p class="likes__item-text">Am liebsten ist Fanni draußen auf dem Platz.</p>
+          </li>
+
+          <li class="likes__item">
+            <span class="likes__icon" aria-hidden="true">🍽️</span>
+            <h3 class="likes__item-title">Fischstäbchen und Früchtetee</h3>
+            <p class="likes__item-text">Nach dem Spiel gibt es Fischstäbchen und Früchtetee.</p>
+          </li>
+
+          <li class="likes__item">
+            <span class="likes__icon" aria-hidden="true">💜</span>
+            <h3 class="likes__item-title">Wörter mit F</h3>
+            <p class="likes__item-text">Fanni übt mit dir viele Wörter mit dem Laut /f/.</p>
+          </li>
+
+        </ul>
       </section>
     )}
 

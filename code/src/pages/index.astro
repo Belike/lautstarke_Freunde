@@ -1,19 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 
-import { friends, upcomingFriends } from '../data/friends';
-import fanniCover from '../assets/fanni-fuchs/cover.png';
-import fanniHero from '../assets/figures/fanni-fuchs-welcome.png';
+import { friends } from '../data/friends';
+
+// Hero figure cut-outs — one per friend, imported individually so the
+// designer can position them freely via modifier classes.
+import fanniFigure from '../assets/figures/fanni-fuchs.png';
+import karloFigure from '../assets/figures/karlo-kater.png';
+import rudiFigure  from '../assets/figures/rudi-raupe.png';
+
 import instagramQr from '../assets/instagram-qr-card.png';
-
-const books = await getCollection('books');
-
-// Cover image per book id (only Fanni Fuchs so far).
-const covers: Record<string, ImageMetadata> = {
-  'fanni-fuchs': fanniCover,
-};
 ---
 
 <BaseLayout title="Startseite">
@@ -26,27 +23,48 @@ const covers: Record<string, ImageMetadata> = {
       <h1 id="hero-heading" class="hero__title">Lautstarke Freunde</h1>
       <p class="hero__lead">
         Logopädische Kinderbücher, die spielerisch einzelne Laute trainieren.
-        Jeder Laut hat seinen eigenen tierischen Freund. Den Anfang macht
-        <strong>Fanni Fuchs</strong> mit dem Laut /f/.
+        Jeder Laut hat seinen eigenen tierischen Freund:
+        <strong>Fanni Fuchs</strong> übt den Laut /f/,
+        <strong>Karlo Kater</strong> den Laut /k/ und
+        <strong>Rudi Raupe</strong> den Laut /r/.
       </p>
-      <a href="/books/fanni-fuchs" class="hero__cta">Fannis Buch entdecken</a>
+      <a href="#books" class="hero__cta">Bücher entdecken</a>
       <p class="hero__secondary">
-        <a href="#books">Alle Bücher ansehen</a>
+        <a href="#friends">Alle Freunde ansehen</a>
       </p>
     </div>
 
-    <div class="hero__figure" aria-hidden="true">
-      <!--
-        Character illustration of Fanni Fuchs.
-        Decorative element, freely positioned (sticks out of the hero frame).
-        aria-hidden, since the name appears in the body text.
-      -->
+    <!--
+      Three figure cut-outs shown as a decorative trio.
+      Each has a BEM modifier so the designer can control size and position
+      per character independently.
+      aria-hidden on the group because the names appear in the body text.
+    -->
+    <div class="hero__figures" aria-hidden="true">
       <Image
-        src={fanniHero}
+        src={fanniFigure}
         alt=""
-        class="hero__figure-image"
-        widths={[320, 560, 800]}
-        sizes="(max-width: 600px) 320px, (max-width: 900px) 560px, 800px"
+        class="hero__figure-image hero__figure-image--fanni"
+        widths={[200, 360, 520]}
+        sizes="(max-width: 600px) 30vw, 260px"
+        loading="eager"
+        decoding="async"
+      />
+      <Image
+        src={karloFigure}
+        alt=""
+        class="hero__figure-image hero__figure-image--karlo"
+        widths={[200, 360, 520]}
+        sizes="(max-width: 600px) 30vw, 260px"
+        loading="eager"
+        decoding="async"
+      />
+      <Image
+        src={rudiFigure}
+        alt=""
+        class="hero__figure-image hero__figure-image--rudi"
+        widths={[200, 360, 520]}
+        sizes="(max-width: 600px) 30vw, 260px"
         loading="eager"
         decoding="async"
       />
@@ -69,7 +87,7 @@ const covers: Record<string, ImageMetadata> = {
     </p>
     <ul class="about__features" role="list">
       <li class="feature">
-        <span class="feature__icon" aria-hidden="true">🦊</span>
+        <span class="feature__icon" aria-hidden="true">🐾</span>
         <span class="feature__text">Tierische Hauptfiguren für Ziellaute</span>
       </li>
       <li class="feature">
@@ -89,67 +107,71 @@ const covers: Record<string, ImageMetadata> = {
 
   <!-- ============================================================
        BOOKS OVERVIEW
+       Driven by the friends data array so all three books appear,
+       including upcoming ones with a "Bald" badge.
        ============================================================ -->
   <section id="books" class="books-overview" aria-labelledby="books-heading">
     <h2 id="books-heading" class="books-overview__title">Unsere Bücher</h2>
 
-    {books.length === 0 ? (
-      <p class="books-overview__empty">
-        Bald geht's los. Das erste Buch ist in Arbeit.
-      </p>
-    ) : (
-      <ul class="books-list" role="list">
-        {books.map((book) => (
-          <li class="books-list__item">
-            <article class="book-card" aria-label={book.data.title}>
-              {covers[book.id] && (
-                <a href={`/books/${book.id}`} class="book-card__cover-link" tabindex="-1" aria-hidden="true">
-                  <Image
-                    src={covers[book.id]}
-                    alt=""
-                    class="book-card__cover"
-                    widths={[220, 360, 480]}
-                    sizes="(max-width: 600px) 70vw, 280px"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </a>
-              )}
-              <header class="book-card__head">
-                <p class="book-card__sound" aria-label={`Ziellaut: ${book.data.sound}`}>
-                  Laut <strong>{book.data.sound}</strong>
-                </p>
-                <h3 class="book-card__title">{book.data.title}</h3>
-                {book.data.subtitle && (
-                  <p class="book-card__subtitle">{book.data.subtitle}</p>
-                )}
-              </header>
+    <ul class="books-list" role="list">
+      {friends.map((friend) => (
+        <li class="books-list__item">
+          <article
+            class:list={['book-card', `book-card--${friend.key}`, friend.status === 'upcoming' && 'book-card--upcoming']}
+            aria-label={friend.bookTitle}
+          >
+            {/* Cover image — linked for available books, plain image for upcoming */}
+            {friend.status === 'available' && friend.href ? (
+              <a href={friend.href} class="book-card__cover-link" tabindex="-1" aria-hidden="true">
+                <Image
+                  src={friend.cover}
+                  alt=""
+                  class="book-card__cover"
+                  widths={[220, 360, 480]}
+                  sizes="(max-width: 600px) 70vw, 280px"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            ) : (
+              <div class="book-card__cover-wrap" aria-hidden="true">
+                <Image
+                  src={friend.cover}
+                  alt=""
+                  class="book-card__cover"
+                  widths={[220, 360, 480]}
+                  sizes="(max-width: 600px) 70vw, 280px"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="book-card__badge" aria-label="Erscheint bald">Bald</span>
+              </div>
+            )}
 
-              {book.data.ageRecommendation && (
-                <p class="book-card__age">
-                  Alter: <span>{book.data.ageRecommendation}</span>
-                </p>
-              )}
+            <header class="book-card__head">
+              <p class="book-card__sound" aria-label={`Ziellaut: ${friend.sound}`}>
+                Laut <strong>{friend.sound}</strong>
+              </p>
+              <h3 class="book-card__title">{friend.bookTitle}</h3>
+            </header>
 
+            <p class="book-card__age">{friend.age}</p>
+
+            {friend.status === 'available' && friend.href ? (
               <a
-                href={`/books/${book.id}`}
+                href={friend.href}
                 class="book-card__link"
-                aria-label={`Mehr zu ${book.data.title}`}
+                aria-label={`Mehr zu ${friend.bookTitle}`}
               >
                 Zum Buch
               </a>
-            </article>
-          </li>
-        ))}
-      </ul>
-    )}
-
-    <p class="books-overview__outlook">
-      Weitere Freunde für weitere Laute kommen bald:
-      {upcomingFriends.map((f, i) => (
-        <>{i > 0 ? ' und ' : ''}<strong>{f.name}</strong> (Laut {f.sound})</>
-      ))}.
-    </p>
+            ) : (
+              <p class="book-card__coming-soon">Erscheint bald</p>
+            )}
+          </article>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <!-- ============================================================
@@ -158,12 +180,13 @@ const covers: Record<string, ImageMetadata> = {
   <section id="friends" class="friends" aria-labelledby="friends-heading">
     <h2 id="friends-heading" class="friends__title">Lern die Freunde kennen</h2>
     <p class="friends__lead">
-      Jeder Laut bekommt seinen eigenen tierischen Freund. Fanni Fuchs macht den
-      Anfang, Karlo Kater und Rudi Raupe folgen.
+      Drei Freunde, drei Laute, drei Abenteuer. Jeder Freund trainiert
+      spielerisch genau einen Ziellaut und begleitet Kinder durch eine
+      Geschichte voller Überraschungen.
     </p>
     <ul class="friends__grid" role="list">
       {friends.map((friend) => (
-        <li class:list={['friend-card', friend.status === 'upcoming' && 'friend-card--soon']}>
+        <li class:list={['friend-card', `friend-card--${friend.key}`, friend.status === 'upcoming' && 'friend-card--soon']}>
           <div class="friend-card__image-area">
             <Image
               src={friend.image}
@@ -213,6 +236,50 @@ const covers: Record<string, ImageMetadata> = {
         </p>
       </div>
     </div>
+  </section>
+
+  <!-- ============================================================
+       FOR PARENTS & PROFESSIONALS — generic, home page version.
+       Reuses the same parent-info / info-card classes as the Fanni
+       book page so existing CSS applies without changes.
+       ============================================================ -->
+  <section id="eltern" class="parent-info" aria-labelledby="eltern-heading">
+    <h2 id="eltern-heading" class="parent-info__title">Für Eltern &amp; Fachleute</h2>
+    <p class="parent-info__lead">
+      Unsere Bücher begleiten Kinder spielerisch während einer logopädischen
+      Behandlung. Jedes Buch stellt einen bestimmten Laut in den Mittelpunkt,
+      der in der Geschichte immer wieder ganz natürlich vorkommt. So hört Ihr
+      Kind den Laut besonders oft, ohne Druck und mit viel Freude.
+    </p>
+
+    <div class="parent-info__cards">
+      <div class="info-card">
+        <h3 class="info-card__title">So unterstützen Sie Ihr Kind</h3>
+        <ul class="info-card__list" role="list">
+          <li>Lesen Sie die Geschichte regelmäßig vor.</li>
+          <li>Sprechen Sie die Wörter ganz natürlich.</li>
+          <li>Betonen Sie den Ziellaut nicht übertrieben.</li>
+          <li>Haben Sie Spaß an der Geschichte.</li>
+          <li>Lassen Sie Ihr Kind zuhören, zeigen oder mitsprechen.</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3 class="info-card__title">Was muss mein Kind können?</h3>
+        <p class="info-card__big">Gar nichts!</p>
+        <p>
+          Ihr Kind muss die Wörter nicht nachsprechen und keine Aufgaben
+          lösen. Schon das Zuhören hilft dabei, den Laut besser
+          kennenzulernen. Lesen Sie die Geschichte ruhig mehrfach.
+          Kinder lieben Wiederholungen.
+        </p>
+      </div>
+    </div>
+
+    <p class="parent-info__note">
+      <strong>Hinweis:</strong> Unsere Bücher ersetzen keine logopädische
+      Behandlung. Sie sind als spielerische Ergänzung für den Alltag gedacht.
+    </p>
   </section>
 
   <!-- ============================================================
