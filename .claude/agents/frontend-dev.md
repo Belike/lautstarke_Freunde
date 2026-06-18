@@ -33,6 +33,11 @@ components under `code/src/`).
   them. Imports come from `code/src/assets/`.
 - Class names are **English**, BEM-ish (e.g. `book-card__title`) so the
   `designer` can style precisely.
+- **Prefer BEM modifier classes over positional selectors for identity hooks.**
+  When a component is rendered for a specific character, add a modifier class
+  (e.g. `book-card--fanni`, `book-card--rudi`) so the `designer` can target it
+  by identity rather than DOM position. This keeps styling stable when order
+  changes.
 - **User-facing content stays German** (text, `alt` text, `aria-label`).
   Code, identifiers and comments are **English**.
 
