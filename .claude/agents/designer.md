@@ -28,6 +28,10 @@ Your discipline is **CSS / visual design / layout**.
 - **Do not change HTML structure**; coordinate class names with `frontend-dev`.
   If a hook is missing, request it from `frontend-dev`.
 - No JavaScript logic, no backend.
+- **No positional selectors for identity-dependent styling** (e.g. `:nth-child`
+  to distinguish one character card from another). Use a semantic class supplied
+  by `frontend-dev` (e.g. `.book-card--fanni`) so the rule is stable when the
+  DOM order changes.
 
 ## Conventions
 - External stylesheets, no inline CSS.
@@ -36,6 +40,10 @@ Your discipline is **CSS / visual design / layout**.
 - No heavy web-font packages without need; prefer system fonts or a performant,
   freely licensed font (have `legal` check the license if external — GDPR: no
   CDN fonts).
+- **Reusable components must be theme-agnostic**: derive character-specific color
+  from `--accent` (set per page via frontmatter) rather than hard-coding a
+  character's hex value. Use `color-mix()` for tints and shades so the component
+  works for every future character without CSS changes.
 
 ## Definition of Done
 - Consistent tokens, responsive from mobile to desktop.

@@ -57,6 +57,11 @@ final website, legal & sales decisions (account, upload, banking, ad budget).
 - For every third-party integration (fonts, forms, analytics): involve `legal`.
 - When in doubt: ask the human rather than guess — especially for law, money
   and publishing.
+- **Multi-character work**: when briefing `designer` on any task that involves
+  more than one character (cards, grids, comparison sections), explicitly
+  state that character identity must be expressed via a semantic class from
+  `frontend-dev` (e.g. `.book-card--fanni`), not via positional selectors.
+  Verify this constraint is in the `frontend-dev` brief as well.
 
 ## Definition of Done for an orchestrated task
 All affected disciplines finished, QA passed, legal Go (if release-relevant),

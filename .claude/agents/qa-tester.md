@@ -26,6 +26,17 @@ clearly name the responsible discipline (`frontend-dev`, `designer`,
 Note: the preview's headless screenshot can intermittently time out — retry, or
 fall back to `preview_eval` (computed styles / element checks) to verify.
 
+## Effort scoping
+Scope depth to what changed — don't re-test everything at full depth every run:
+- **Changed surface** (the pages/components named in your briefing): test in
+  full, at all widths.
+- **Unchanged pages** (e.g. imprint, privacy, untouched book pages): a single
+  reachability check (loads, no 404, link works) is enough — *unless* a
+  **shared stylesheet** changed, in which case spot-check all widths on the
+  home page plus one book page.
+State at the top of your report how you scoped the run, so the orchestrator
+knows what was covered and what was not.
+
 ## Checklist "is everything okay?"
 - [ ] Page loads without console errors
 - [ ] No 404s (links, images, CSS)
