@@ -103,6 +103,17 @@
   --accent-rudi:    #2d8a3e;   /* forest green — Rudi Raupe / sound /r/    */
   --accent-rudi-dk: #1f6a2d;   /* darker green for hover states            */
 
+  /* ------------------------------------------------------------------
+     EXTERNAL BRAND COLORS — Amazon
+     These are intentionally outside the Lautstarke-Freunde character
+     palette. Use exclusively for Amazon buy-button CTAs so the button
+     is immediately recognisable as an Amazon purchase action.
+     ------------------------------------------------------------------ */
+  --amazon-yellow:    #FFD814;   /* Amazon primary button background        */
+  --amazon-yellow-dk: #F7CA00;   /* hover / active state (slightly deeper)  */
+  --amazon-ink:       #0F1111;   /* Amazon near-black text (contrast ~14:1) */
+  --amazon-border:    #FCD200;   /* subtle pill border on the yellow button */
+
   /*
    * --accent is the actively used page accent.
    * Global (home/brand): teal — colorful, not violet.
@@ -117,10 +128,12 @@
      ------------------------------------------------------------------ */
   --color-bg:          #fffcf8;   /* page background, warm white             */
   --color-bg-subtle:   #f0f8f5;   /* section alternate background (teal tint) */
+  --color-bg-muted:    #e8ece9;   /* disabled / muted surface (neutral grey-green) */
   --color-surface:     #ffffff;   /* cards, panels                           */
   --color-ink:         #172b25;   /* main text (very high contrast ~15:1)    */
   --color-ink-muted:   #3d5a50;   /* secondary text (≥ 7:1 on --color-bg)   */
   --color-ink-subtle:  #6b8a7e;   /* hints, captions (≥ 4.5:1)              */
+  --color-ink-disabled: #8a9e95;  /* disabled element text (≥ 4.5:1 on --color-bg-muted) */
   --color-border:      var(--color-brand-200);
   --color-border-subtle: var(--color-brand-100);
 

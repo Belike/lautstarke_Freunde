@@ -33,7 +33,17 @@ export type Friend = {
   cover: ImageMetadata;
   /** Book detail route once the book is out; undefined while upcoming. */
   href?: string;
-  status: 'available' | 'upcoming';
+  /**
+   * When set, renders a "Bei Amazon kaufen" buy button linking to this URL.
+   * Leave unset until Norma supplies the final Amazon product links.
+   */
+  amazonUrl?: string;
+  /**
+   * available — released and purchasable.
+   * review    — submitted to Amazon, pending approval; not yet purchasable.
+   * upcoming  — announced but not yet submitted.
+   */
+  status: 'available' | 'review' | 'upcoming';
 };
 
 export const friends: Friend[] = [
@@ -49,7 +59,7 @@ export const friends: Friend[] = [
     age: 'ab 3 Jahren',
     cover: fanniCover,
     href: '/books/fanni-fuchs',
-    status: 'available',
+    status: 'review',
   },
   {
     key: 'rudi',
@@ -63,6 +73,7 @@ export const friends: Friend[] = [
     age: 'ab 3 Jahren',
     cover: rudiCover,
     href: '/books/rudi-raupe',
+    amazonUrl: 'https://www.amazon.de/dp/B0H68JCLLZ',
     status: 'available',
   },
   {
@@ -76,7 +87,8 @@ export const friends: Friend[] = [
     bookTitle: 'Karlo Kater und das kunterbunte Kuchen-Picknick',
     age: 'ab 3 Jahren',
     cover: karloCover,
-    status: 'upcoming',
+    amazonUrl: 'https://www.amazon.de/dp/B0H685QBRK',
+    status: 'available',
   },
 ];
 

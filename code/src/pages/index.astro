@@ -116,12 +116,18 @@ import instagramQr from '../assets/instagram-qr-card.png';
     <ul class="books-list" role="list">
       {friends.map((friend) => (
         <li class="books-list__item">
+          {/*
+            Per-character modifier (book-card--fanni/--rudi/--karlo) drives
+            accent colours. Status modifiers (--review/--upcoming) are removed:
+            state is now expressed solely via the button enabled/disabled pattern.
+          */}
           <article
-            class:list={['book-card', `book-card--${friend.key}`, friend.status === 'upcoming' && 'book-card--upcoming']}
+            class:list={['book-card', `book-card--${friend.key}`]}
             aria-label={friend.bookTitle}
           >
-            {/* Cover image — linked for available books, plain image for upcoming */}
-            {friend.status === 'available' && friend.href ? (
+            {/* Cover — linked when an on-site page exists, plain wrap otherwise.
+                No status badges: the buttons below communicate availability. */}
+            {friend.href ? (
               <a href={friend.href} class="book-card__cover-link" tabindex="-1" aria-hidden="true">
                 <Image
                   src={friend.cover}
@@ -144,7 +150,6 @@ import instagramQr from '../assets/instagram-qr-card.png';
                   loading="lazy"
                   decoding="async"
                 />
-                <span class="book-card__badge" aria-label="Erscheint bald">Bald</span>
               </div>
             )}
 
@@ -157,17 +162,56 @@ import instagramQr from '../assets/instagram-qr-card.png';
 
             <p class="book-card__age">{friend.age}</p>
 
-            {friend.status === 'available' && friend.href ? (
-              <a
-                href={friend.href}
-                class="book-card__link"
-                aria-label={`Mehr zu ${friend.bookTitle}`}
-              >
-                Zum Buch
-              </a>
-            ) : (
-              <p class="book-card__coming-soon">Erscheint bald</p>
-            )}
+            {/*
+              Unified two-button actions area — always both buttons present.
+              Button 1 (primary): "Bei Amazon kaufen"
+                Active   → <a> when amazonUrl is set AND status is 'available'.
+                Disabled → <button disabled> otherwise (e.g. Fanni in review).
+              Button 2 (secondary): "Mehr erfahren"
+                Active   → <a> when an on-site detail page (href) exists.
+                Disabled → <button disabled> when no page exists yet (e.g. Karlo).
+            */}
+            <div class="book-card__actions">
+              {friend.amazonUrl && friend.status === 'available' ? (
+                <a
+                  href={friend.amazonUrl}
+                  class="book-card__buy-button"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${friend.bookTitle} bei Amazon kaufen`}
+                >
+                  Bei Amazon kaufen
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  class="book-card__buy-button book-card__buy-button--disabled"
+                  disabled
+                  aria-label="Bald bei Amazon erhältlich"
+                >
+                  Bei Amazon kaufen
+                </button>
+              )}
+
+              {friend.href ? (
+                <a
+                  href={friend.href}
+                  class="book-card__more-link"
+                  aria-label={`Mehr zu ${friend.bookTitle}`}
+                >
+                  Mehr erfahren
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  class="book-card__more-link book-card__more-link--construction"
+                  disabled
+                  aria-label="Seite im Aufbau"
+                >
+                  Im Aufbau
+                </button>
+              )}
+            </div>
           </article>
         </li>
       ))}
@@ -186,7 +230,9 @@ import instagramQr from '../assets/instagram-qr-card.png';
     </p>
     <ul class="friends__grid" role="list">
       {friends.map((friend) => (
-        <li class:list={['friend-card', `friend-card--${friend.key}`, friend.status === 'upcoming' && 'friend-card--soon']}>
+        // Per-character modifier (friend-card--fanni/--rudi/--karlo) drives accent colours.
+        // Status modifiers (--soon/--review) removed; state lives in the buttons below.
+        <li class:list={['friend-card', `friend-card--${friend.key}`]}>
           <div class="friend-card__image-area">
             <Image
               src={friend.image}
@@ -201,11 +247,57 @@ import instagramQr from '../assets/instagram-qr-card.png';
           <p class="friend-card__sound">Laut <strong>{friend.sound}</strong></p>
           <h3 class="friend-card__name">{friend.name}</h3>
           <p class="friend-card__text">{friend.description}</p>
-          {friend.status === 'available' && friend.href ? (
-            <a class="friend-card__link" href={friend.href}>Zum Buch</a>
-          ) : (
-            <span class="friend-card__badge">Bald</span>
-          )}
+
+          {/*
+            Unified two-button actions area — always both buttons present.
+            Button 1 (primary): "Bei Amazon kaufen"
+              Active   → <a> when amazonUrl is set AND status is 'available'.
+              Disabled → <button disabled> otherwise.
+            Button 2 (secondary): "Mehr erfahren"
+              Active   → <a> when an on-site detail page (href) exists.
+              Disabled → <button disabled> when no page exists yet.
+          */}
+          <div class="friend-card__actions">
+            {friend.amazonUrl && friend.status === 'available' ? (
+              <a
+                href={friend.amazonUrl}
+                class="friend-card__buy-button"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${friend.name}: Bei Amazon kaufen`}
+              >
+                Bei Amazon kaufen
+              </a>
+            ) : (
+              <button
+                type="button"
+                class="friend-card__buy-button friend-card__buy-button--disabled"
+                disabled
+                aria-label="Bald bei Amazon erhältlich"
+              >
+                Bei Amazon kaufen
+              </button>
+            )}
+
+            {friend.href ? (
+              <a
+                class="friend-card__more-link"
+                href={friend.href}
+                aria-label={`Mehr zu ${friend.name}`}
+              >
+                Mehr erfahren
+              </a>
+            ) : (
+              <button
+                type="button"
+                class="friend-card__more-link friend-card__more-link--construction"
+                disabled
+                aria-label="Seite im Aufbau"
+              >
+                Im Aufbau
+              </button>
+            )}
+          </div>
         </li>
       ))}
     </ul>
@@ -236,50 +328,6 @@ import instagramQr from '../assets/instagram-qr-card.png';
         </p>
       </div>
     </div>
-  </section>
-
-  <!-- ============================================================
-       FOR PARENTS & PROFESSIONALS — generic, home page version.
-       Reuses the same parent-info / info-card classes as the Fanni
-       book page so existing CSS applies without changes.
-       ============================================================ -->
-  <section id="eltern" class="parent-info" aria-labelledby="eltern-heading">
-    <h2 id="eltern-heading" class="parent-info__title">Für Eltern &amp; Fachleute</h2>
-    <p class="parent-info__lead">
-      Unsere Bücher begleiten Kinder spielerisch während einer logopädischen
-      Behandlung. Jedes Buch stellt einen bestimmten Laut in den Mittelpunkt,
-      der in der Geschichte immer wieder ganz natürlich vorkommt. So hört Ihr
-      Kind den Laut besonders oft, ohne Druck und mit viel Freude.
-    </p>
-
-    <div class="parent-info__cards">
-      <div class="info-card">
-        <h3 class="info-card__title">So unterstützen Sie Ihr Kind</h3>
-        <ul class="info-card__list" role="list">
-          <li>Lesen Sie die Geschichte regelmäßig vor.</li>
-          <li>Sprechen Sie die Wörter ganz natürlich.</li>
-          <li>Betonen Sie den Ziellaut nicht übertrieben.</li>
-          <li>Haben Sie Spaß an der Geschichte.</li>
-          <li>Lassen Sie Ihr Kind zuhören, zeigen oder mitsprechen.</li>
-        </ul>
-      </div>
-
-      <div class="info-card">
-        <h3 class="info-card__title">Was muss mein Kind können?</h3>
-        <p class="info-card__big">Gar nichts!</p>
-        <p>
-          Ihr Kind muss die Wörter nicht nachsprechen und keine Aufgaben
-          lösen. Schon das Zuhören hilft dabei, den Laut besser
-          kennenzulernen. Lesen Sie die Geschichte ruhig mehrfach.
-          Kinder lieben Wiederholungen.
-        </p>
-      </div>
-    </div>
-
-    <p class="parent-info__note">
-      <strong>Hinweis:</strong> Unsere Bücher ersetzen keine logopädische
-      Behandlung. Sie sind als spielerische Ergänzung für den Alltag gedacht.
-    </p>
   </section>
 
   <!-- ============================================================
