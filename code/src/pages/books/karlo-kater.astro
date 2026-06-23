@@ -1,0 +1,214 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+
+import cover from '../../assets/Karlo Kater/cover.png';
+import karloFigure from '../../assets/figures/karlo-kater.png';
+
+// Fetch the markdown body from the books content collection.
+// The route /books/karlo-kater is owned by this standalone page, not by
+// [...slug].astro (which explicitly excludes karlo-kater to avoid a
+// duplicate-route build error).
+const karlo = await getEntry('books', 'karlo-kater');
+const { Content } = await render(karlo);
+---
+
+<BaseLayout
+  title="Karlo Kater"
+  description="Karlo Kater und das kunterbunte Kuchen-Picknick: ein logopädisches Kinderbuch für den Laut /k/ ab 3 Jahren."
+  accent="var(--accent-karlo)"
+>
+  <article class="book" aria-labelledby="book-title">
+
+    <!-- ============================================================
+         BOOK HEADER
+         ============================================================ -->
+    <header class="book__head">
+      <nav class="book__breadcrumb" aria-label="Brotkrumennavigation">
+        <ol class="breadcrumb__list" role="list">
+          <li class="breadcrumb__item">
+            <a href="/">Start</a>
+          </li>
+          <li class="breadcrumb__item" aria-hidden="true">›</li>
+          <li class="breadcrumb__item">
+            <a href="/#books">Bücher</a>
+          </li>
+          <li class="breadcrumb__item" aria-hidden="true">›</li>
+          <li class="breadcrumb__item" aria-current="page">
+            Karlo Kater
+          </li>
+        </ol>
+      </nav>
+
+      <p class="book__sound-badge" aria-label={"Ziellaut dieses Buches: /k/"}>
+        Laut <strong>/k/</strong>
+      </p>
+      <h1 id="book-title" class="book__title">Karlo Kater</h1>
+      <p class="book__subtitle">Der neugierige Kater für den Laut /k/</p>
+      <p class="book__age">
+        Altersempfehlung: <span>ab 3 Jahren</span>
+      </p>
+    </header>
+
+    <!-- ============================================================
+         COVER
+         ============================================================ -->
+    <div class="book__cover">
+      <Image
+        src={cover}
+        alt={"Cover von „Karlo Kater und das kunterbunte Kuchen-Picknick“: Karlo Kater sitzt mit einem Keks an einem Picknicktisch voller Kuchen und Naschereien, umgeben von seinen Freunden."}
+        class="book__cover-image"
+        widths={[360, 600, 900]}
+        sizes="(max-width: 600px) 90vw, (max-width: 1100px) 360px, 448px"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+
+    <!-- ============================================================
+         BOOK DESCRIPTION
+         ============================================================ -->
+    <section class="book__description" aria-labelledby="description-heading">
+      <h2 id="description-heading" class="book__description-title">
+        Worum geht es?
+      </h2>
+      <div class="book__content">
+        <Content />
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CHARACTER PROFILE / STECKBRIEF
+         Data taken from Karlo's character sheet ("Mein Steckbrief").
+         ============================================================ -->
+    <section class="steckbrief" aria-labelledby="steckbrief-heading">
+      <h2 id="steckbrief-heading" class="steckbrief__headline">Das ist Karlo Kater!</h2>
+
+      <div class="steckbrief__layout">
+
+        <!-- Clipboard card (LEFT) -->
+        <div class="steckbrief__clipboard">
+          <div class="steckbrief__clip" aria-hidden="true"></div>
+          <div class="steckbrief__card">
+            <h3 class="steckbrief__card-title">Karlo Kater Steckbrief</h3>
+            <dl class="steckbrief__data">
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🐱</span>Name</dt>
+                <dd class="steckbrief__val">Karlo Kater</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🎂</span>Alter</dt>
+                <dd class="steckbrief__val">Noch ganz klein</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🏡</span>Wohnort</dt>
+                <dd class="steckbrief__val">Mein Kuschelkörbchen</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">👁️</span>Augenfarbe</dt>
+                <dd class="steckbrief__val">Türkisblau</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🎨</span>Lieblingsfarbe</dt>
+                <dd class="steckbrief__val">Kobaltblau</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">🦘</span>Lieblingstier</dt>
+                <dd class="steckbrief__val">Känguru</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">📍</span>Lieblingsort</dt>
+                <dd class="steckbrief__val">Gartenbank</dd>
+              </div>
+              <div class="steckbrief__row">
+                <dt class="steckbrief__key"><span class="steckbrief__icon" aria-hidden="true">❤️</span>Lieblingsbeschäftigung</dt>
+                <dd class="steckbrief__val">Picknicken, Klettern, Kuchen backen</dd>
+              </div>
+            </dl>
+            <p class="steckbrief__motto">
+              <span class="steckbrief__motto-icon" aria-hidden="true">⭐</span>
+              <em>„Komm, wir klettern, kuscheln und backen Kuchen!"</em>
+            </p>
+          </div>
+        </div>
+
+        <!-- Karlo figure (RIGHT) -->
+        <div class="steckbrief__figure" aria-hidden="true">
+          <Image
+            src={karloFigure}
+            alt=""
+            class="steckbrief__figure-image"
+            widths={[240, 360, 480]}
+            sizes="(max-width: 600px) 50vw, 300px"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         DAS MAG KARLO BESONDERS
+         Themed via --accent-karlo / cobalt-blue palette (set through the
+         BaseLayout accent prop above).
+         BEM block: likes
+         Classes: .likes, .likes__title, .likes__grid, .likes__item,
+                  .likes__item-title, .likes__item-text, .likes__icon
+         ============================================================ -->
+    <section class="likes" aria-labelledby="likes-heading">
+      <h2 id="likes-heading" class="likes__title">Das mag Karlo besonders</h2>
+
+      <ul class="likes__grid" role="list">
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🍰</span>
+          <h3 class="likes__item-title">Kuchen backen</h3>
+          <p class="likes__item-text">Karlo backt am liebsten kunterbunten Kuchen.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">☕</span>
+          <h3 class="likes__item-title">Kakao trinken</h3>
+          <p class="likes__item-text">Nach dem Klettern gibt es heißen Kakao.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">💙</span>
+          <h3 class="likes__item-title">Kuscheln</h3>
+          <p class="likes__item-text">Im Kuschelkörbchen kuschelt Karlo am liebsten.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🧗</span>
+          <h3 class="likes__item-title">Klettern</h3>
+          <p class="likes__item-text">Karlo klettert kühn auf jeden Baum.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">📦</span>
+          <h3 class="likes__item-title">Kartons erkunden</h3>
+          <p class="likes__item-text">Kein Karton ist vor dem neugierigen Kater sicher.</p>
+        </li>
+
+        <li class="likes__item">
+          <span class="likes__icon" aria-hidden="true">🐾</span>
+          <h3 class="likes__item-title">Wörter mit K</h3>
+          <p class="likes__item-text">Karlo übt mit dir viele Wörter mit dem Laut /k/.</p>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ============================================================
+         BACK LINK
+         ============================================================ -->
+    <nav class="book__navigation" aria-label="Seitennavigation">
+      <a href="/#books" class="book__back-link">
+        &#8592; Zurück zur Bücherübersicht
+      </a>
+    </nav>
+
+  </article>
+</BaseLayout>

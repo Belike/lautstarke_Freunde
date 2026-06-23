@@ -8,11 +8,13 @@ import fanniPointing from '../../assets/figures/fanni-fuchs-pointing.png';
 
 export async function getStaticPaths() {
   const books = await getCollection('books');
-  // rudi-raupe is excluded here because it has its own dedicated standalone
-  // page at code/src/pages/books/rudi-raupe.astro, which owns the /books/rudi-raupe
-  // route and renders the markdown body itself via getEntry/render. Generating
-  // the same route here would cause a duplicate-route build error.
-  const filteredBooks = books.filter((b) => b.id !== 'rudi-raupe');
+  // rudi-raupe and karlo-kater are excluded here because each has its own
+  // dedicated standalone page (code/src/pages/books/rudi-raupe.astro,
+  // code/src/pages/books/karlo-kater.astro) that owns its route and renders the
+  // markdown body itself via getEntry/render. Generating the same route here
+  // would cause a duplicate-route build error.
+  const standalonePages = ['rudi-raupe', 'karlo-kater'];
+  const filteredBooks = books.filter((b) => !standalonePages.includes(b.id));
   return filteredBooks.map((book) => ({
     params: { slug: book.id },
     props: { book },

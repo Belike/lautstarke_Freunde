@@ -59,7 +59,8 @@ export const friends: Friend[] = [
     age: 'ab 3 Jahren',
     cover: fanniCover,
     href: '/books/fanni-fuchs',
-    status: 'review',
+    amazonUrl: 'https://www.amazon.de/dp/B0H6G9T14Y',
+    status: 'available',
   },
   {
     key: 'rudi',
@@ -87,6 +88,7 @@ export const friends: Friend[] = [
     bookTitle: 'Karlo Kater und das kunterbunte Kuchen-Picknick',
     age: 'ab 3 Jahren',
     cover: karloCover,
+    href: '/books/karlo-kater',
     amazonUrl: 'https://www.amazon.de/dp/B0H685QBRK',
     status: 'available',
   },
